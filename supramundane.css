@@ -1,0 +1,34 @@
+@font-face {
+  font-family: "Josefin Sans";
+  src: url("JosefinSans-VariableFont_wght.ttf");
+  font-style: normal;
+}
+@font-face {
+  font-family: "Josefin Sans";
+  src: url("JosefinSans-Italic-VariableFont_wght.ttf");
+  font-style: italic;
+}
+
+:root {
+  --header-fam: "Josefin Sans"; 
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+h1 {
+  font-size: 4rem;
+  font-family: var(--header-fam);
+  margin: 0;
+  line-height: 1;
+  font-weight: 100;
+}
