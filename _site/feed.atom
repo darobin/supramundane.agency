@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="pretty-atom-feed.xsl" type="text/xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>Supramundane Agency</title>
+  <subtitle>governance &amp; technology</subtitle>
+  <link href="https://supramundane.agency/feed.atom" rel="self" />
+  <link href="https://supramundane.agency/" />
+  <updated>2025-03-24T17:23:20Z</updated>
+  <id>https://supramundane.agency/</id>
+  <author>
+    <name>Robin Berjon</name>
+  </author>
+</feed>

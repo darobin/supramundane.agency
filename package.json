@@ -7,11 +7,11 @@
   "author": "Robin Berjon <robin@berjon.com>",
   "license": "Apache-2.0",
   "scripts": {
-		"build": "npx @11ty/eleventy",
-		"build-ghpages": "npx @11ty/eleventy --pathprefix=/eleventy-base-blog/",
-		"watch": "npx @11ty/eleventy --serve --quiet"
-	},
-	"bin": {},
+    "build": "npx @11ty/eleventy",
+    "build-ghpages": "npx @11ty/eleventy --pathprefix=/eleventy-base-blog/",
+    "watch": "npx @11ty/eleventy --serve --quiet --port=8765"
+  },
+  "bin": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/darobin/supramundane.agency.git"
@@ -33,7 +33,6 @@
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
     "@11ty/eleventy-img": "^6.0.1",
-    "@11ty/eleventy-navigation": "^1.0.1",
     "@11ty/eleventy-plugin-rss": "^2.0.3",
     "@zachleat/heading-anchors": "^1.0.3",
     "eslint": "^8.26.0",

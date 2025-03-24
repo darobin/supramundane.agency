@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="{{ metadata.language }}">
+  <head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>{{ title or metadata.title }}</title>
+		<link rel="stylesheet" href="/css/supramundane.css">
+		<link rel="shortcut icon" href="/icon.svg">
+		<meta name="description" content="{{ description or metadata.description }}">
+		<link rel="alternate" href="/feed.atom" type="application/atom+xml" title="{{ metadata.title }}">
+		<link rel="stylesheet" href="{% getBundleFileUrl "css" %}">
+
+		{#- Add the heading-anchors web component to the JavaScript bundle #}
+		{%- js %}{% include "node_modules/@zachleat/heading-anchors/heading-anchors.js" %}{% endjs %}
+	</head>
+	<body>
+		<a href="#skip" class="visually-hidden">Skip to main content.</a>
+		<header>
+			<a href="/" class="home-link">supramundane</a>
+		</header>
+		<main id="skip">
+			<heading-anchors>
+				{{ content | safe }}
+			</heading-anchors>
+		</main>
+		<footer>
+			<p>~~</p>
+		</footer>
+		<script type="module" src="{% getBundleFileUrl "js" %}"></script>
+	</body>
+</html>
