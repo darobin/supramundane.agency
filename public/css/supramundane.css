@@ -12,6 +12,7 @@
 :root {
   --page-width: 880px;
   --header-fam: "Josefin Sans";
+  --line: 23px solid black;
 }
 
 html, body {
@@ -20,11 +21,20 @@ html, body {
   height: 100vh;
   width: 100vw;
 }
+body {
+  border-top: var(--line);
+}
 header, main, footer {
   max-width: var(--page-width);
   margin: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+header {
+  border-bottom: var(--line);
+  margin-bottom: 4rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 header a.home-link {
   font-size: 4rem;

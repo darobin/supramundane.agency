@@ -7,9 +7,9 @@ import pluginFilters from "./_config/filters.js";
 
 export default async function (eleventyConfig) {
 	// Drafts, see also _data/eleventyDataSchema.js
-	eleventyConfig.addPreprocessor("drafts", "*", (data, content) => {
-		if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") return false;
-	});
+	// eleventyConfig.addPreprocessor("drafts", "*", (data, content) => {
+	// 	if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") return false;
+	// });
 
 	// Copy the contents of the `public` folder to the output folder
 	// For example, `./public/css/` ends up in `_site/css/`
@@ -24,17 +24,12 @@ export default async function (eleventyConfig) {
 	// https://www.11ty.dev/docs/watch-serve/#add-your-own-watch-targets
 
 	// Watch images for the image pipeline.
-	eleventyConfig.addWatchTarget("content/**/*.{svg,webp,png,jpg,jpeg,gif}");
+	eleventyConfig.addWatchTarget("content/**/*.{svg,png,jpg,gif}");
 
 	// Per-page bundles, see https://github.com/11ty/eleventy-plugin-bundle
-	// Adds the {% css %} paired shortcode
-	eleventyConfig.addBundle("css", {
-		toFileDirectory: "dist",
-	});
-	// Adds the {% js %} paired shortcode
-	eleventyConfig.addBundle("js", {
-		toFileDirectory: "dist",
-	});
+	// Adds the {% css %} and {% js %} paired shortcodes
+	eleventyConfig.addBundle("css", { toFileDirectory: "dist" });
+	eleventyConfig.addBundle("js", { toFileDirectory: "dist" });
 
 	// Official plugins
 	eleventyConfig.addPlugin(HtmlBasePlugin);
@@ -63,7 +58,7 @@ export default async function (eleventyConfig) {
 	// Image optimization: https://www.11ty.dev/docs/plugins/image/#eleventy-transform
 	eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
 		// Output formats for each image.
-		formats: ["jpeg", "png", "svg", "avif", "webp", "auto"], // XXX is this correct?
+		formats: ["auto"],
 		// widths: ["auto"],
 		failOnError: false,
 		htmlOptions: {

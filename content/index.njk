@@ -1,6 +1,16 @@
 ---js
 const numberOfLatestPostsToShow = 3;
 ---
+<div id="about">
+  <div id="pic"><img src="./robin-278.jpg" alt="Robin Berjon"></div>
+  <div id="desc">
+    <p>
+      Supramundane Agency is a consultancy specialised in the governance of
+      technology, operated principally by <a href="https://berjon.com/">Robin Berjon</a>.
+    </p>
+  </div>
+</div>
+
 {% set postsCount = collections.news | length %}
 {% set latestPostsCount = postsCount | min(numberOfLatestPostsToShow) %}
 <h1>Latest {{ latestPostsCount }} Post{% if latestPostsCount != 1 %}s{% endif %}</h1>

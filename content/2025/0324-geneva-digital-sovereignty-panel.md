@@ -9,6 +9,8 @@ tags:
   - sovereignty
 ---
 
+![The Graduate Institute's logo atop a blurry picture of the world](0324-geneva-digital-sovereignty-panel.jpg)
+
 tk
 - pic of the panel
 - Marc, Konstantinos, Neha, Amb. Kah
