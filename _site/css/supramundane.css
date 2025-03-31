@@ -3,16 +3,33 @@
   src: url("JosefinSans-VariableFont_wght.ttf");
   font-style: normal;
 }
-@font-face {
+/* @font-face {
   font-family: "Josefin Sans";
   src: url("JosefinSans-Italic-VariableFont_wght.ttf");
+  font-style: italic;
+} */
+@font-face {
+  font-family: "Mulish";
+  src: url("Mulish-VariableFont_wght.ttf");
+  font-style: normal;
+}
+@font-face {
+  font-family: "Mulish";
+  src: url("Mulish-Italic-VariableFont_wght.ttf");
   font-style: italic;
 }
 
 :root {
   --page-width: 880px;
   --header-fam: "Josefin Sans";
-  --line: 23px solid black;
+  --body-fam: "Mulish";
+  --line: 0;
+  --mid-green: #4f9c5a;
+  --bad-pink: #ae5395;
+  --desat-pink: #efa1a6;
+  --grey-teal: #729397;
+  --yelly: #f4b32c;
+  --too-red: #dc1b27;
 }
 
 html, body {
@@ -20,9 +37,11 @@ html, body {
   padding: 0;
   height: 100vh;
   width: 100vw;
-}
-body {
-  border-top: var(--line);
+  font-size: 16px;
+  font-family: var(--body-fam);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  font-weight: 200;
 }
 header, main, footer {
   max-width: var(--page-width);
@@ -31,13 +50,13 @@ header, main, footer {
   padding-right: 1rem;
 }
 header {
-  border-bottom: var(--line);
+  display: flex;
   margin-bottom: 4rem;
-  padding-top: 1rem;
+  padding-top: 2rem;
   padding-bottom: 1rem;
 }
 header a.home-link {
-  font-size: 4rem;
+  font-size: 64px;
   font-family: var(--header-fam);
   margin: 0;
   line-height: 1;
@@ -46,10 +65,17 @@ header a.home-link {
   color: inherit;
   text-decoration: none;
 }
-#lines {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+header svg {
+  margin-top: -4px;
+  margin-left: 4px;
+}
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--highlight);
+  transition: text-decoration-thickness .2s;
+}
+a:hover {
+  text-decoration-thickness: 5px;
 }
