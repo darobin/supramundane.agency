@@ -1,19 +1,22 @@
 ---js
 const numberOfLatestPostsToShow = 3;
 ---
-<div id="about">
-  <!-- <div id="pic"><img src="./robin-278.jpg" alt="Robin Berjon"></div> -->
-  <div id="desc">
-    <p>
-      <strong>Supramundane Agency</strong> is a consultancy specialised in the governance of
-      technology, operated principally by <a href="https://berjon.com/">Robin Berjon</a>.
-    </p>
-  </div>
-</div>
+<section id="about">
+  <p>
+    <strong>Supramundane Agency</strong> is a consultancy specialised in the governance of
+    technology, operated principally by <a href="https://berjon.com/">Robin Berjon</a>.
+  </p>
+  <p>
+    Our methods include specifying protocols, developing libraries, prototypes, and products,
+    creating strategies to ensure that a specific technology has governance affordances,
+    designing institutions and governance mechanisms, participating in standards setting,
+    developing policymaker positions and white papers, and writing about technology for both
+    lay and specialised audiences.
+  </p>
+</section>
+<hr>
 
 {% set postsCount = collections.news | length %}
-{% set latestPostsCount = postsCount | min(numberOfLatestPostsToShow) %}
-<h1>Latest {{ latestPostsCount }} Post{% if latestPostsCount != 1 %}s{% endif %}</h1>
 
 {% set postslist = collections.news | head(-1 * numberOfLatestPostsToShow) %}
 {% set postslistCounter = postsCount %}
