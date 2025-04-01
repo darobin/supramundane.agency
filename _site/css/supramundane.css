@@ -99,3 +99,33 @@ hr::after {
 h2 {
   font-size: inherit;
 }
+
+ol.postlist {
+  list-style-type: none;
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+ol.postlist > li {
+  width: 300px;
+}
+ol.postlist h3 {
+  font-weight: bolder;
+  font-size: inherit;
+  margin: 0;
+}
+.meta {
+  font-size: 0.8rem;
+  text-align: right;
+}
+.meta .sep {
+  color: var(--highlight);
+}
+.meta a {
+  text-decoration-thickness: 1px;
+}
+.meta a:hover {
+  text-decoration-thickness: 3px;
+}

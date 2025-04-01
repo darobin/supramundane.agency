@@ -1,11 +1,13 @@
 <ol class="postlist">
 {%- for post in postslist %}
-	<li class="postlist-item">
-		<a href="{{ post.url }}">{% if post.data.image %}<img src="{{ post | imagePath }}" alt="{{ post.data.imageAlt }}" width="280" height="175">{% endif %}</a>
-		<a href="{{ post.url }}">{{ post.data.title }}</a>
-		<time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
-		{% if post.data.image %}<a href="https://www.openstreetmap.org/search?query={{ post.data.location | encodeURIComponent }}" class="location" target="_blank">{{ post.data.location }}</a>{% endif %}
+	<li>
+		<a href="{{ post.url }}">{% if post.data.image %}<img src="{{ post | imagePath }}" alt="{{ post.data.imageAlt }}" width="300" height="185">{% endif %}</a>
+		<h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
 		<p>{{ post.data.description }}</p>
+		<div class="meta">
+		  {% if post.data.location %}<a href="https://www.openstreetmap.org/search?query={{ post.data.location | encodeURIComponent }}" class="location" target="_blank">{{ post.data.location }}</a> <span class="sep">⬩</span>{% endif %}
+		  <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
+		</div>
 	</li>
 {%- endfor %}
 </ol>
