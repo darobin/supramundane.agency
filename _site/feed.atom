@@ -5,11 +5,23 @@
   <subtitle>governance &amp; technology</subtitle>
   <link href="https://supramundane.agency/feed.atom" rel="self" />
   <link href="https://supramundane.agency/" />
-  <updated>2025-03-24T00:00:00Z</updated>
+  <updated>2025-05-26T00:00:00Z</updated>
   <id>https://supramundane.agency/</id>
   <author>
     <name>Robin Berjon</name>
   </author>
+  <entry>
+    <title>Re:publica</title>
+    <link href="https://supramundane.agency/2025/0526-republica/" />
+    <updated>2025-05-26T00:00:00Z</updated>
+    <id>https://supramundane.agency/2025/0526-republica/</id>
+    <content type="html">&lt;p&gt;tk&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pic of the conference&lt;/li&gt;
+&lt;li&gt;short abstract&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>Digital &amp; Data Sovereignty: Definitions and Technologies for Independence and Resilience</title>
     <link href="https://supramundane.agency/2025/0324-geneva-digital-sovereignty-panel/" />

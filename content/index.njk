@@ -1,5 +1,5 @@
 ---js
-const numberOfLatestPostsToShow = 3;
+const numberOfLatestPostsToShow = 12;
 ---
 <section id="about">
   <p>
@@ -13,16 +13,35 @@ const numberOfLatestPostsToShow = 3;
     developing policymaker positions and white papers, and writing about technology for both
     lay and specialised audiences.
   </p>
+  <p>
+    If you're trying to define or deploy technology that isn't dystopian, that promotes
+    democracy and human agency, then you've come to the right place.
+    <a href="mailto:robin@berjon.com?subject=Supramundane%20Contact">Reach out!</a>
+  </p>
 </section>
 <hr>
 
-{% set postsCount = collections.news | length %}
+{% set upcomingPosts = collections.news | upcoming  %}
+{% set upcomingCount = upcomingPosts | length %}
+{% if upcomingCount > 0 %}
+<section>
+  <h2>Upcoming</h2>
+  {% set postslist = upcomingPosts %}
+  {% include "postslist.njk" %}
+</section>
+<hr>
+{% endif %}
 
-{% set postslist = collections.news | head(-1 * numberOfLatestPostsToShow) %}
-{% set postslistCounter = postsCount %}
-{% include "postslist.njk" %}
-
-{% set morePosts = postsCount - numberOfLatestPostsToShow %}
-{% if morePosts > 0 %}
-<p>{{ morePosts }} more post{% if morePosts != 1 %}s{% endif %} can be found in <a href="blog.njk">the archive</a>.</p>
+{% set precedingPosts = collections.news | preceding | head(-1 * numberOfLatestPostsToShow)  %}
+{% set precedingCount = precedingPosts | length %}
+{% if precedingCount > 0 %}
+<section>
+  <h2>Previously</h2>
+  {% set postslist = precedingPosts %}
+  {% include "postslist.njk" %}
+  {% set morePosts = precedingCount - numberOfLatestPostsToShow %}
+  {% if morePosts > 0 %}
+  <p><a href="blog.njk">more…</a></p>
+  {% endif %}
+</section>
 {% endif %}
