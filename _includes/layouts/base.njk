@@ -9,9 +9,6 @@
 		<meta name="description" content="{{ description or metadata.description }}">
 		<link rel="alternate" href="/feed.atom" type="application/atom+xml" title="{{ metadata.title }}">
 		<link rel="stylesheet" href="{% getBundleFileUrl "css" %}">
-
-		{#- Add the heading-anchors web component to the JavaScript bundle #}
-		{%- js %}{% include "node_modules/@zachleat/heading-anchors/heading-anchors.js" %}{% endjs %}
 	</head>
 	<body>
 		<header>
@@ -35,9 +32,7 @@
       </svg>
 		</header>
 		<main>
-			<heading-anchors>
-				{{ content | safe }}
-			</heading-anchors>
+			{{ content | safe }}
 		</main>
 		<footer>
 			<p>~~</p>

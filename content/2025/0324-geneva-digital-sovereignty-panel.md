@@ -5,12 +5,12 @@ description:
   to discuss data sovereignty and infrastructure with the UN community."
 date: 2025-03-24
 location: Geneva, CH
+image: 0324-geneva-digital-sovereignty-panel.jpg
+imageAlt: "The Graduate Institute's logo atop a blurry picture of the world"
 tags:
   - news
   - sovereignty
 ---
-
-![The Graduate Institute's logo atop a blurry picture of the world](0324-geneva-digital-sovereignty-panel.jpg)
 
 tk
 - pic of the panel

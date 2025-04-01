@@ -18,6 +18,11 @@ export default async function (eleventyConfig) {
 			"./public/": "/"
 		})
 		.addPassthroughCopy("./content/pretty-atom-feed.xsl")
+		.addPassthroughCopy("**/*.jpg")
+		.addPassthroughCopy("**/*.png")
+		.addPassthroughCopy("**/*.gif")
+		.addPassthroughCopy("**/*.svg")
+		.addPassthroughCopy("**/*.pdf")
 	;
 
 	// Run Eleventy when these files change:

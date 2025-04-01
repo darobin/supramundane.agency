@@ -2,6 +2,13 @@
 import { DateTime } from "luxon";
 
 export default function (eleventyConfig) {
+  eleventyConfig.addFilter("stringify", (obj) => JSON.stringify(obj, null, 2));
+  eleventyConfig.addFilter("encodeURIComponent", (str) => encodeURIComponent(str));
+  eleventyConfig.addFilter("imagePath", (post) => {
+    const base = post.filePathStem.replace(post.fileSlug, '');
+    return `${base}${post.data.image}`;
+  });
+
   eleventyConfig.addFilter("readableDate", (dateObj, format, zone) => {
     // Formatting tokens for Luxon: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
     return DateTime.fromJSDate(dateObj, { zone: zone || "utc" }).toFormat(format || "yyyy-LL-dd");
