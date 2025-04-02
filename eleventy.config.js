@@ -1,11 +1,11 @@
 
 import { IdAttributePlugin, InputPathToUrlTransformPlugin, HtmlBasePlugin } from "@11ty/eleventy";
 import { feedPlugin } from "@11ty/eleventy-plugin-rss";
-// import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
 
 import pluginFilters from "./_config/filters.js";
 
 export default async function (eleventyConfig) {
+  eleventyConfig.addPlugin(pluginFilters);
 	// Drafts, see also _data/eleventyDataSchema.js
 	// eleventyConfig.addPreprocessor("drafts", "*", (data, content) => {
 	// 	if (data.draft && process.env.ELEVENTY_RUN_MODE === "build") return false;
@@ -18,11 +18,11 @@ export default async function (eleventyConfig) {
 			"./public/": "/"
 		})
 		.addPassthroughCopy("./content/pretty-atom-feed.xsl")
-		.addPassthroughCopy("**/*.jpg")
-		.addPassthroughCopy("**/*.png")
-		.addPassthroughCopy("**/*.gif")
-		.addPassthroughCopy("**/*.svg")
-		.addPassthroughCopy("**/*.pdf")
+		.addPassthroughCopy("./content/**/*.jpg")
+		.addPassthroughCopy("./content/**/*.png")
+		.addPassthroughCopy("./content/**/*.gif")
+		.addPassthroughCopy("./content/**/*.svg")
+		.addPassthroughCopy("./content/**/*.pdf")
 	;
 
 	// Run Eleventy when these files change:
@@ -78,7 +78,6 @@ export default async function (eleventyConfig) {
 	// });
 
 	// Filters
-	eleventyConfig.addPlugin(pluginFilters);
 	eleventyConfig.addPlugin(IdAttributePlugin, {
 		// by default we use Eleventy’s built-in `slugify` filter:
 		// slugify: eleventyConfig.getFilter("slugify"),

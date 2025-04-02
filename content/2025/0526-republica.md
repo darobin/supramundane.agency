@@ -1,4 +1,5 @@
 ---
+layout: layouts/news.njk
 title: "Re:publica"
 description:
   "I will be speaking at Re:publica. Details to follow."

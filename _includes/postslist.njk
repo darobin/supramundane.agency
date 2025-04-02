@@ -1,7 +1,7 @@
 <ol class="postlist">
 {%- for post in postslist %}
 	<li>
-		<a href="{{ post.url }}">{% if post.data.image %}<img src="{{ post | imagePath }}" alt="{{ post.data.imageAlt }}" width="300" height="185">{% endif %}</a>
+		{% if post.data.image %}<a href="{{ post.url }}"><img src="{{ post | imagePath }}" alt="{{ post.data.imageAlt }}" width="300" height="185"></a>{% endif %}
 		<h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
 		<p>{{ post.data.description }}</p>
 		<div class="meta">

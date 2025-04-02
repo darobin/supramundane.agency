@@ -69,6 +69,14 @@ header svg {
   margin-top: -8px;
   margin-left: 4px;
 }
+footer {
+  font-size: 0.8rem;
+  text-align: right;
+  margin-top: 4rem;
+  /* padding-top: 1rem; */
+  padding-bottom: 1rem;
+  border-top: 1px dotted var(--highlight);
+}
 a {
   color: inherit;
   text-decoration: underline;
@@ -96,10 +104,13 @@ hr::after {
   mask-position: center;
   mask-repeat: no-repeat;
 }
+h1 {
+  margin: 0;
+  line-height: 1.2;
+}
 h2 {
   font-size: inherit;
 }
-
 ol.postlist {
   list-style-type: none;
   display: grid;
@@ -123,9 +134,28 @@ ol.postlist h3 {
 .meta .sep {
   color: var(--highlight);
 }
-.meta a {
+.tags a, .meta a {
   text-decoration-thickness: 1px;
 }
-.meta a:hover {
+.tags a:hover, .meta a:hover {
   text-decoration-thickness: 3px;
+}
+.tags {
+  font-size: 0.8rem;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+img.illustration {
+  float: left;
+  margin: 0 1rem 10px 0;
+}
+.page {
+  line-height: 1.3;
+}
+.page .meta {
+  margin-bottom: 4rem;
+}
+.links-nextprev {
+  clear: both;
 }

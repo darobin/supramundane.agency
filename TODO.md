@@ -2,6 +2,12 @@
 # To Do
 
 - Move off GH and to polity.json
+- List of clients/projects
+- Privacy policy
+- social (with bridge)
+- Home link
+- mobile
+- social metadata (including reusing stuff on posts)
 
 - make news entries for:
   - UPCOMING
@@ -9,6 +15,9 @@
     - Web Engines
     - Protocol Berg
     - Gdansk
+      Towards European technological sovereignty and resilient digital public sphere: challenges, opportunities & milestones
+      Digital Summit – the closing event of the Polish Presidency of the European Union, which will take place in Gdańsk, POLAND, 17-18 June 2025
+      Panoptykon Foundation, Mozilla, Future of Technology Institute, OpenFuture Foundation and Open Markets Institute will co-host
   - PAST
     - OP
     - Rewilding anthology
@@ -38,3 +47,4 @@
     - signed DIIF
     - KK podcast
     - that US guy podcast
+    - IPFS DD position
