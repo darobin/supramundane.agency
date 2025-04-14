@@ -20,7 +20,7 @@
 }
 
 :root {
-  --page-width: 880px;
+  --page-width: 960px;
   --header-fam: "Josefin Sans";
   --body-fam: "Mulish";
   --line: 0;
@@ -32,6 +32,9 @@
   --too-red: #dc1b27;
 }
 
+* {
+  box-sizing: border-box;
+}
 html, body {
   margin: 0;
   padding: 0;
@@ -114,18 +117,24 @@ h2 {
 ol.postlist {
   list-style-type: none;
   display: grid;
-  gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
   padding: 0;
   font-size: 1rem;
   line-height: 1.2;
 }
 ol.postlist > li {
   width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 ol.postlist h3 {
   font-weight: bolder;
   font-size: inherit;
   margin: 0;
+}
+ol.postlist p:last-of-type {
+  flex-grow: 1;
 }
 .meta {
   font-size: 0.8rem;

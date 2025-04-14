@@ -4,10 +4,13 @@ import { DateTime } from "luxon";
 export default function (eleventyConfig) {
   eleventyConfig.addFilter("stringify", (obj) => JSON.stringify(obj, null, 2));
   eleventyConfig.addFilter("encodeURIComponent", (str) => encodeURIComponent(str));
-  eleventyConfig.addFilter("imagePath", function (post){
+  eleventyConfig.addFilter("imagePath", function (post) {
     const image = post?.data?.image || this.ctx.image;
     const base = post.filePathStem.replace(post.fileSlug, '');
     return `${base}${image}`;
+  });
+  eleventyConfig.addFilter("unp", function (html) {
+    return html.replace(/^\s*<p>/i, '').replace(/<\/p>\s*^/i, '');
   });
 
   eleventyConfig.addFilter("readableDate", (dateObj, format, zone) => {

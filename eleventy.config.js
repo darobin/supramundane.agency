@@ -1,5 +1,5 @@
 
-import { IdAttributePlugin, InputPathToUrlTransformPlugin, HtmlBasePlugin } from "@11ty/eleventy";
+import { IdAttributePlugin, InputPathToUrlTransformPlugin, HtmlBasePlugin, EleventyRenderPlugin } from "@11ty/eleventy";
 import { feedPlugin } from "@11ty/eleventy-plugin-rss";
 
 import pluginFilters from "./_config/filters.js";
@@ -39,6 +39,7 @@ export default async function (eleventyConfig) {
 	// Official plugins
 	eleventyConfig.addPlugin(HtmlBasePlugin);
 	eleventyConfig.addPlugin(InputPathToUrlTransformPlugin);
+	eleventyConfig.addPlugin(EleventyRenderPlugin);
 
 	eleventyConfig.addPlugin(feedPlugin, {
 		type: "atom", // or "rss", "json"
