@@ -21,10 +21,11 @@ layout: layouts/base.njk
   {%- set previousPost = collections.news | getPreviousCollectionItem %}
   {%- set nextPost = collections.news | getNextCollectionItem %}
   {%- if nextPost or previousPost %}
+  <hr>
   <div class="links-nextprev">
-  	{%- if previousPost %}<a href="{{ previousPost.url }}">← {{ previousPost.data.title }}</a>{% endif %}
+  	{%- if previousPost %}<a href="{{ previousPost.url }}" class="prev">← {{ previousPost.data.title }}</a>{% endif %}
   	{%- if previousPost and nextPost %}<span class="sep">⬩</span>{% endif %}
-  	{%- if nextPost %}<a href="{{ nextPost.url }}">{{ nextPost.data.title }} →</a>{% endif %}
+  	{%- if nextPost %}<a href="{{ nextPost.url }}" class="next">{{ nextPost.data.title }} →</a>{% endif %}
   </div>
   {%- endif %}
   {%- endif %}

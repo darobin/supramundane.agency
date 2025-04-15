@@ -46,7 +46,16 @@ html, body {
   line-height: 1.5;
   font-weight: 200;
 }
-header, main, footer {
+.skip-to-content-link {
+  left: 50%;
+  position: absolute;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+}
+.skip-to-content-link:focus {
+  transform: translateY(0%);
+}
+header, nav, main, footer {
   max-width: var(--page-width);
   margin: auto;
   padding-left: 1rem;
@@ -54,9 +63,7 @@ header, main, footer {
 }
 header {
   display: flex;
-  margin-bottom: 4rem;
   padding-top: 2rem;
-  padding-bottom: 1rem;
 }
 header a.home-link {
   font-size: 64px;
@@ -71,6 +78,18 @@ header a.home-link {
 header svg {
   margin-top: -8px;
   margin-left: 4px;
+}
+nav {
+  margin-bottom: 4rem;
+}
+nav ul {
+  list-style: none;
+  text-align: right;
+  margin: 0;
+}
+nav li {
+  display: inline-block;
+  margin-left: 0.2rem;
 }
 footer {
   font-size: 0.8rem;
@@ -167,4 +186,6 @@ img.illustration {
 }
 .links-nextprev {
   clear: both;
+  display: flex;
+  gap: 1rem;
 }
