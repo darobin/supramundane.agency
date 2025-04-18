@@ -5,7 +5,15 @@
 		<h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
 		<p>{{ post.data.description }}</p>
 		<div class="meta">
-		  {% if post.data.location %}<a href="https://www.openstreetmap.org/search?query={{ post.data.location | encodeURIComponent }}" class="location" target="_blank">{{ post.data.location }}</a> <span class="sep">⬩</span>{% endif %}
+  {% if location %}
+      {% if location !== "online" %}<a href="https://www.openstreetmap.org/search?query={{ location | encodeURIComponent }}" class="location" target="_blank">{{ location }}</a>{% else %}online{% endif %}
+      <span class="sep">⬩</span>{}
+    {% endif %}
+
+		  {% if post.data.location %}
+				{% if post.data.location !== "online" %}<a href="https://www.openstreetmap.org/search?query={{ post.data.location | encodeURIComponent }}" class="location" target="_blank">{{ post.data.location }}</a>{% else %}online{% endif %}
+			 <span class="sep">⬩</span>
+			{% endif %}
 		  <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
 		</div>
 	</li>

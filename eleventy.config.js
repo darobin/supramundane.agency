@@ -23,6 +23,7 @@ export default async function (eleventyConfig) {
 		.addPassthroughCopy("./content/**/*.gif")
 		.addPassthroughCopy("./content/**/*.svg")
 		.addPassthroughCopy("./content/**/*.pdf")
+		.addPassthroughCopy("./content/**/*.mp4")
 	;
 
 	// Run Eleventy when these files change:

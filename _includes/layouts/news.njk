@@ -10,7 +10,10 @@ layout: layouts/base.njk
   </ul>
   <h1>{{ title }}</h1>
   <div class="meta">
-    {% if location %}<a href="https://www.openstreetmap.org/search?query={{ location | encodeURIComponent }}" class="location" target="_blank">{{ location }}</a> <span class="sep">⬩</span>{% endif %}
+    {% if location %}
+      {% if location !== "online" %}<a href="https://www.openstreetmap.org/search?query={{ location | encodeURIComponent }}" class="location" target="_blank">{{ location }}</a>{% else %}online{% endif %}
+      <span class="sep">⬩</span>
+    {% endif %}
     <time datetime="{{ date | htmlDateString }}">{{ date | readableDate }}</time>
   </div>
 

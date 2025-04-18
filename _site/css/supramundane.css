@@ -178,6 +178,9 @@ img.illustration {
   float: left;
   margin: 0 1rem 10px 0;
 }
+img, video {
+  max-width: 100%;
+}
 .page {
   line-height: 1.3;
 }
