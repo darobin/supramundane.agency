@@ -5,21 +5,55 @@
   <subtitle>governance &amp; technology</subtitle>
   <link href="https://supramundane.agency/feed.atom" rel="self" />
   <link href="https://supramundane.agency/" />
-  <updated>2025-05-26T00:00:00Z</updated>
+  <updated>2025-05-28T00:00:00Z</updated>
   <id>https://supramundane.agency/</id>
   <author>
     <name>Robin Berjon</name>
   </author>
   <entry>
-    <title>Re:publica</title>
-    <link href="https://supramundane.agency/2025/0526-republica/" />
-    <updated>2025-05-26T00:00:00Z</updated>
-    <id>https://supramundane.agency/2025/0526-republica/</id>
-    <content type="html">&lt;p&gt;tk&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;pic of the conference&lt;/li&gt;
-&lt;li&gt;short abstract&lt;/li&gt;
-&lt;/ul&gt;
+    <title>Web Engines Hackfest</title>
+    <link href="https://supramundane.agency/2025/0602-weh/" />
+    <updated>2025-05-28T00:00:00Z</updated>
+    <id>https://supramundane.agency/2025/0602-weh/</id>
+    <content type="html">&lt;p&gt;I will be at [Web Engines Hackfest](https://webengineshackfest.org/, meeting with people who want to
+figure out where browsers should be going next.&lt;/p&gt;
+&lt;p&gt;I proposed a breakout on &lt;a href=&quot;https://github.com/Igalia/webengineshackfest/issues/55&quot;&gt;Browser Funding After Search Deals&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Browsers have, for the most part, a simple business model: a search engine pays them in exchange for
+market share. Over the past two decades, these deals have constrained browser user interfaces into a
+set of patterns that don&#39;t risk interfering with search traffic, have constrained users into
+continually degrading search experiences, and have organised a system that contributes to defunding
+the rest of the web.&lt;/p&gt;
+&lt;p&gt;Thankfully, the legality of these arrangements has been called into question and even though the
+situation remains fluid, browsers are looking for new sources of revenue. What does that look like?
+What becomes possible if we are no longer bound by the UX choices of our ancestors in which we have
+to drive eyeballs to a search engine as fast and often as we can? This session will brainstorm
+alternatives, will explore both new UX and new business models. Multihoming search? Integrating
+commerce? Ads? Social? It&#39;s all on the table.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If it happens, I hope I&#39;ll see you there!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Re:publica: How We Can Finally Make The Digital World Democratic</title>
+    <link href="https://supramundane.agency/2025/0527-republica/" />
+    <updated>2025-05-28T00:00:00Z</updated>
+    <id>https://supramundane.agency/2025/0527-republica/</id>
+    <content type="html">&lt;p&gt;I&#39;m delighted to be speaking at &lt;a href=&quot;https://re-publica.com/&quot;&gt;Re:publica&lt;/a&gt;,
+where I&#39;ll be giving a talk about &amp;quot;&lt;em&gt;&lt;a href=&quot;https://re-publica.com/de/session/how-we-can-finally-make-digital-world-democratic-starting-social-media&quot;&gt;How We Can Finally Make The Digital World Democratic: Starting With Social Media&lt;/a&gt;&lt;/em&gt;&amp;quot;.&lt;/p&gt;
+&lt;p&gt;The abstract says it all:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Most of the digital sphere is under authoritarian governance: we only get change by begging large
+companies to act better or sometimes by forcing them. And when you take an authoritarian system and
+you use it as infrastructure for society, through the power of infrastructure that society becomes
+authoritarian as well.&lt;/p&gt;
+&lt;p&gt;We cannot continue this way, but the fact that there is limited experience with democratic governance
+in the digital sphere makes it challenging to understand how to approach the problem. In this talk,
+we will see how by using open protocols and technical architectures that are compatible with
+democracy, and by understanding the role of digital infrastructure, we can build democratic social
+media.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;See you there if you&#39;re going!&lt;/p&gt;
 </content>
   </entry>
   <entry>

@@ -15,17 +15,13 @@ Image: 560 × 350
 
 - make news entries for:
   - UPCOMING
-    - TBIP?
-    - Republica (once I have the material)
-    - Web Engines Hackfest
     - Protocol Berg
     - Gdansk
       Towards European technological sovereignty and resilient digital public sphere: challenges, opportunities & milestones
       Digital Summit – the closing event of the Polish Presidency of the European Union, which will take place in Gdańsk, POLAND, 17-18 June 2025
       Panoptykon Foundation, Mozilla, Future of Technology Institute, OpenFuture Foundation and Open Markets Institute will co-host
   - PAST
-    - FoTI white paper (0317)
-    - DDG DMA letter (Feb 2025)
+    - DDG DMA letter (Feb 2025, https://bsky.app/profile/did:plc:izttpdp3l6vss5crelt5kcux/post/3ljmsqarww22h)
     - Brazilian mission (2025-02-14)
     - Disinfo FoF (2025-02-13)
     - A19 presentation (2025-02-13)

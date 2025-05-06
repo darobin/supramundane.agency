@@ -192,3 +192,10 @@ img, video {
   display: flex;
   gap: 1rem;
 }
+blockquote {
+  clear: both;
+  border-left: 0.5rem solid var(--highlight);
+  margin-left: 0;
+  padding-left: 1rem;
+  font-style: italic;
+}
