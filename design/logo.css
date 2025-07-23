@@ -23,15 +23,15 @@ body {
   display: inline-block;
 }
 .logo svg {
-  width: 5rem;
-  stroke: var(--variant);
+  width: calc(5rem * var(--zoom, 1));
+  stroke: var(--variant, #000);
 }
 .logo div {
   white-space: pre;
   font-family: Cormorant;
   font-weight: 100;
-  font-size: 2rem;
-  letter-spacing: 0.3rem;
-  color: var(--variant);
+  font-size: calc(2rem * var(--zoom, 1));
+  letter-spacing: calc(0.3rem * var(--zoom, 1));
+  color: var(--variant, #000);
   line-height: 1;
 }
