@@ -1,0 +1,37 @@
+
+@font-face {
+  font-family: "Cormorant";
+  src: url("../public/css/Cormorant-VariableFont_wght.ttf");
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cormorant";
+  src: url("../public/css/Cormorant-Italic-VariableFont_wght.ttf");
+  font-style: italic;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.logo {
+  text-align: center;
+  display: inline-block;
+}
+.logo svg {
+  width: 5rem;
+  stroke: var(--variant);
+}
+.logo div {
+  white-space: pre;
+  font-family: Cormorant;
+  font-weight: 100;
+  font-size: 2rem;
+  letter-spacing: 0.3rem;
+  color: var(--variant);
+  line-height: 1;
+}

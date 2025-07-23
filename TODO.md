@@ -3,6 +3,21 @@
 
 Image: 560 × 350
 
+# Priotities
+- focus on recent events, build up list laterr
+- what is it we do?
+- people:
+  - bio for me
+  - add Bumble
+  - Potential:
+    - Wendy
+    - Heather
+    - Cori
+    - Leevi
+    - Gautam
+    - Lauren
+
+
 # To Do
 
 - Move off GH and to polity.json
@@ -14,13 +29,13 @@ Image: 560 × 350
 - social metadata (including reusing stuff on posts)
 
 - make news entries for:
-  - UPCOMING
+  - UPCOMING (2)
     - Protocol Berg
     - Gdansk
       Towards European technological sovereignty and resilient digital public sphere: challenges, opportunities & milestones
       Digital Summit – the closing event of the Polish Presidency of the European Union, which will take place in Gdańsk, POLAND, 17-18 June 2025
       Panoptykon Foundation, Mozilla, Future of Technology Institute, OpenFuture Foundation and Open Markets Institute will co-host
-  - PAST
+  - PAST (24)
     - DDG DMA letter (Feb 2025, https://bsky.app/profile/did:plc:izttpdp3l6vss5crelt5kcux/post/3ljmsqarww22h)
     - Brazilian mission (2025-02-14)
     - Disinfo FoF (2025-02-13)
@@ -43,5 +58,5 @@ Image: 560 × 350
     - Project Syndicate oped
     - signed DIIF
     - KK podcast
-    - that US guy podcast
+    - Hearsay Culture https://www.youtube.com/watch?v=Ud8z8PiNLDs
     - IPFS DD position
