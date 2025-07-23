@@ -24,7 +24,7 @@ body {
 }
 .logo svg {
   width: calc(5rem * var(--zoom, 1));
-  stroke: var(--variant, #000);
+  stroke: var(--color, #000);
 }
 .logo div {
   white-space: pre;
@@ -32,6 +32,6 @@ body {
   font-weight: 100;
   font-size: calc(2rem * var(--zoom, 1));
   letter-spacing: calc(0.3rem * var(--zoom, 1));
-  color: var(--variant, #000);
+  color: var(--color, #000);
   line-height: 1;
 }
