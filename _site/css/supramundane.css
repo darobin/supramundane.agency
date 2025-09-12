@@ -217,3 +217,17 @@ blockquote {
   padding-left: 1rem;
   font-style: italic;
 }
+
+@media only screen and (max-width:980px) {
+  ol.postlist {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media only screen and (max-width:650px) {
+  ol.postlist {
+    grid-template-columns: 1fr;
+  }
+  ol.postlist > li {
+    width: auto;
+  }
+}

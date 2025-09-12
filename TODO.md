@@ -3,32 +3,12 @@
 
 Image: 560 × 350
 
-# Priotities
-- focus on recent events, build up list laterr
-- what is it we do?
-- people:
-  - bio for me
-  - add Bumble
-  - Potential:
-    - Wendy
-    - Heather
-    - Cori
-    - Leevi
-    - Gautam
-    - Lauren
+# TODO
 
-
-# To Do
-
-- Move off GH and to polity.json
-  - x Caddy
-  - Deploy
-  - Domain
 - List of clients/projects
 - Privacy policy
 - social (with bridge)
 - Home link
-- mobile
 - social metadata (including reusing stuff on posts)
 
 - make news entries for:
