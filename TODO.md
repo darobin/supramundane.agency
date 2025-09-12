@@ -21,6 +21,9 @@ Image: 560 × 350
 # To Do
 
 - Move off GH and to polity.json
+  - Caddy
+  - Deploy
+  - Domain
 - List of clients/projects
 - Privacy policy
 - social (with bridge)
@@ -29,13 +32,27 @@ Image: 560 × 350
 - social metadata (including reusing stuff on posts)
 
 - make news entries for:
-  - UPCOMING (2)
+  - UPCOMING
+    - Cypherpunk
+    - OFE & DPGA roundtable
+    - Digital SME (+past)
+    - Tech Sovereignty Day
+    - Riga
+    - Adtech RHEA event(?)
+    - Think & Do
+  - PAST
+    - Eurosky article
+    - BBC article
+    - DTA x2
+    - WEASL
+    - ecdpm
+    - IETF
+    - Public AI retreat
     - Protocol Berg
     - Gdansk
       Towards European technological sovereignty and resilient digital public sphere: challenges, opportunities & milestones
       Digital Summit – the closing event of the Polish Presidency of the European Union, which will take place in Gdańsk, POLAND, 17-18 June 2025
       Panoptykon Foundation, Mozilla, Future of Technology Institute, OpenFuture Foundation and Open Markets Institute will co-host
-  - PAST (24)
     - DDG DMA letter (Feb 2025, https://bsky.app/profile/did:plc:izttpdp3l6vss5crelt5kcux/post/3ljmsqarww22h)
     - Brazilian mission (2025-02-14)
     - Disinfo FoF (2025-02-13)
