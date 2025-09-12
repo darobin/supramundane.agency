@@ -21,7 +21,7 @@ Image: 560 × 350
 # To Do
 
 - Move off GH and to polity.json
-  - Caddy
+  - x Caddy
   - Deploy
   - Domain
 - List of clients/projects
