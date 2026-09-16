@@ -8,10 +8,12 @@ Image: 560 × 350
 - List of clients/projects
 - Privacy policy
 - social (with bridge)
-- Home link
-- social metadata (including reusing stuff on posts)
 
 - make news entries for:
+  - Republica: publish video
+  - Düsseldorf
+  - DTA parliament with video
+  - the book!
   - UPCOMING
     - Cypherpunk
     - OFE & DPGA roundtable
@@ -27,7 +29,9 @@ Image: 560 × 350
     - WEASL
     - ecdpm
     - IETF
-    - Public AI retreat
+    - Public AI launch + retreat
+    - Airbus for AI doc
+    - REARM open letter
     - Protocol Berg
     - Gdansk
       Towards European technological sovereignty and resilient digital public sphere: challenges, opportunities & milestones

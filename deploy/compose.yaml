@@ -1,0 +1,14 @@
+services:
+  supramundane-agency:
+    build: .
+    restart: unless-stopped
+    container_name: supramundane-agency
+    volumes:
+      - ${SM_DATA_ROOT:-/srv/supramundane/data}/supramundane-agency:/data
+    networks:
+      - default
+
+networks:
+  default:
+    name: supramundane
+    external: true

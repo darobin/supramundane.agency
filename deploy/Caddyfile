@@ -1,0 +1,27 @@
+# Internal vhost — served only behind the supramundane front proxy.
+# Public domain, TLS, and privacy headers are handled by the front.
+:80 {
+	root * /data
+
+	# apex only
+	@www header Host www.*
+	redir @www https://supramundane.agency{uri} permanent
+
+	# ATProto handle verification and standard.site publication pointer are
+	# extensionless text files.
+	@wellknown path /.well-known/atproto-did /.well-known/site.standard.publication
+	header @wellknown Content-Type "text/plain; charset=utf-8"
+
+	# Deploys are atomic-ish rsyncs; cache assets, not pages.
+	@assets path /css/* /js/* /img/* *.jpg *.jpeg *.png *.gif *.svg *.webp *.mp4 *.pdf *.ttf
+	header @assets Cache-Control "public, max-age=86400"
+
+	handle_errors {
+		@notfound expression {http.error.status_code} == 404
+		rewrite @notfound /404.html
+		file_server
+	}
+
+	try_files {path} {path}/index.html
+	file_server
+}

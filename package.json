@@ -2,41 +2,39 @@
   "name": "supramundane.agency",
   "type": "module",
   "private": true,
-  "version": "0.0.1",
-  "description": "supramundane.agency",
+  "version": "0.1.0",
+  "description": "supramundane.agency — static site, local CMS, and publisher",
   "author": "Robin Berjon <robin@berjon.com>",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "npx @11ty/eleventy",
-    "build-ghpages": "npx @11ty/eleventy --pathprefix=/eleventy-base-blog/",
-    "watch": "npx @11ty/eleventy --serve --quiet --port=8765"
+    "build": "node build/index.js",
+    "cms": "node cms/server.js",
+    "cms:ui": "node cms/bundle.js",
+    "cms:ui:watch": "node cms/bundle.js --watch",
+    "dev": "npm run cms:ui && node cms/server.js",
+    "publish:site": "node cms/deploy.js",
+    "sm:deploy": "cd deploy && sm deploy"
   },
-  "bin": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/darobin/supramundane.agency.git"
   },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "mocha": true,
-      "es2021": true
-    },
-    "extends": "eslint:recommended",
-    "overrides": [],
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "module"
-    },
-    "rules": {}
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.19.5",
+    "@lit-labs/signals": "^0.2.0",
+    "express": "^5.1.0",
+    "gray-matter": "^4.0.3",
+    "lit": "^3.3.2",
+    "markdown-it": "^14.1.0",
+    "refrakt": "^1.0.0"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.0.0",
-    "@11ty/eleventy-img": "^6.0.1",
-    "@11ty/eleventy-plugin-rss": "^2.0.3",
-    "eslint": "^8.26.0",
-    "luxon": "^3.5.0",
-    "zod": "^3.24.2",
-    "zod-validation-error": "^3.4.0"
+    "esbuild": "^0.25.0"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
   }
 }

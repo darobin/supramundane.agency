@@ -1,0 +1,9 @@
+{
+  "name": "supramundane-agency",
+  "type": "static",
+  "domains": {
+    "local": ["supramundane.bast"],
+    "prod": ["supramundane.agency", "www.supramundane.agency"]
+  },
+  "data": true
+}
