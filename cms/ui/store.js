@@ -17,7 +17,8 @@ export const initialState = {
   today: '',
   atproto: { loggedIn: false },
   deploy: {},
-  settings: { autoPublish: false },
+  settings: { autoPublish: false, autoAnnounce: false },
+  backfill: null,
   lastBuild: null,
   lastPublish: null,
   previewUrl: '',
@@ -223,9 +224,9 @@ export function update(state, action) {
       });
     case 'busy':
       return tx({ ...state, busy: { ...state.busy, [action.key]: action.value } });
-    case 'settings/autoPublish':
-      return tx({ ...state, settings: { ...state.settings, autoPublish: action.value } }, async function* () {
-        try { const s = await api.settings({ autoPublish: action.value }); yield { type: 'settings/set', settings: s }; }
+    case 'settings/set-flag':
+      return tx({ ...state, settings: { ...state.settings, [action.key]: action.value } }, async function* () {
+        try { const s = await api.settings({ [action.key]: action.value }); yield { type: 'settings/set', settings: s }; }
         catch (err) { yield { type: 'toast', message: err.message, kind: 'error' }; }
       });
     case 'settings/set':
@@ -239,6 +240,11 @@ export function update(state, action) {
       if (name === 'publish-log') return tx({ ...state, log: [...state.log.slice(-200), payload.line] });
       if (name === 'error') return update(state, { type: 'toast', message: `${payload.where}: ${payload.message}`, kind: 'error' });
       if (name === 'items-changed') return update(state, { type: 'refresh' });
+      if (name === 'announced') return update(state, { type: 'toast', message: `Announced: ${payload.bskyWebUrl || payload.atUri}`, kind: 'success' });
+      if (name === 'backfill') {
+        if (payload.finished) return update({ ...state, backfill: { ...state.backfill, running: false, finished: true, done: payload.done, failed: payload.failed } }, { type: 'refresh' });
+        return tx({ ...state, backfill: { ...(state.backfill || {}), running: true, ...payload, log: [...(state.backfill?.log || []).slice(-50), `${payload.status === 'failed' ? '✗' : payload.status === 'done' ? '✓' : '…'} ${payload.title}${payload.error ? ` — ${payload.error}` : ''}`] } });
+      }
       return tx(state);
     }
 
@@ -271,6 +277,20 @@ export function update(state, action) {
         catch (err) { yield { type: 'toast', message: err.message, kind: 'error' }; }
         yield { type: 'busy', key: 'atproto', value: false };
       });
+
+    case 'atproto/backfill':
+      return tx({ ...state, backfill: { running: true, log: [], step: 0, total: 0 } }, async function* () {
+        try {
+          const r = await api.atproto.backfill({ types: action.types, post: action.post });
+          if (!r.queued) yield { type: 'toast', message: 'Nothing to backfill — every item already has a record' };
+          yield { type: 'backfill/queued', queued: r.queued };
+        } catch (err) {
+          yield { type: 'toast', message: err.message, kind: 'error' };
+          yield { type: 'backfill/queued', queued: 0 };
+        }
+      });
+    case 'backfill/queued':
+      return tx(action.queued ? { ...state, backfill: { ...state.backfill, total: action.queued } } : { ...state, backfill: null });
 
     // ── Announce (standard.site + Bluesky) ──────────────────────────────────
     case 'announce/open': {

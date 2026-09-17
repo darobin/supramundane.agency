@@ -24,14 +24,13 @@ export class ImageCrop extends LitElement {
       width: 100%;
       max-width: 560px;
       border: 2px dashed var(--line);
-      border-radius: var(--radius);
-      background: repeating-conic-gradient(#f0efe9 0 25%, #fff 0 50%) 0 0 / 20px 20px;
+      background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0 / 20px 20px;
       overflow: hidden;
       cursor: pointer;
       user-select: none;
       touch-action: none;
     }
-    .frame.over { border-color: var(--accent); background: #eaf5ec; }
+    .frame.over { border-color: var(--accent); background: #efeafd; }
     .frame.has { border-style: solid; cursor: grab; }
     .frame.has:active { cursor: grabbing; }
     canvas, img.current { display: block; width: 100%; height: auto; }

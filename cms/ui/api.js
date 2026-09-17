@@ -34,10 +34,11 @@ export const api = {
     publication: () => req('POST', '/api/atproto/publication'),
     preview: (type, id) => req('GET', `/api/atproto/preview/${type}/${enc(id)}`),
     publish: (type, id, opts) => req('POST', `/api/atproto/publish/${type}/${enc(id)}`, opts),
+    backfill: (opts) => req('POST', '/api/atproto/backfill', opts),
   },
   events(onEvent) {
     const es = new EventSource('/api/events');
-    for (const name of ['hello', 'built', 'published', 'publish-log', 'error', 'items-changed']) {
+    for (const name of ['hello', 'built', 'published', 'publish-log', 'error', 'items-changed', 'announced', 'backfill']) {
       es.addEventListener(name, (e) => onEvent(name, JSON.parse(e.data || '{}')));
     }
     return es;

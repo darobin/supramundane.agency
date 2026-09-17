@@ -6,7 +6,7 @@ import { watch } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { ROOT, OUT_DIR, loadSite, saveSite, loadCollection, loadItem, saveItem, deleteItem, fileFor, exists } from '../lib/content.js';
-import { collections, siteFields, validate, titleOf } from '../lib/schema.js';
+import { collections, siteFields, validate, forEachAsset } from '../lib/schema.js';
 import { today } from '../lib/dates.js';
 import { build } from '../build/index.js';
 import { publish, deployConfig } from './deploy.js';
@@ -19,7 +19,7 @@ const UPLOADS = path.join(STATE_DIR, 'uploads');
 const SETTINGS = path.join(STATE_DIR, 'settings.json');
 
 await mkdir(UPLOADS, { recursive: true });
-let settings = (await exists(SETTINGS)) ? JSON.parse(await readFile(SETTINGS, 'utf8')) : { autoPublish: false };
+let settings = { autoPublish: false, autoAnnounce: false, ...((await exists(SETTINGS)) ? JSON.parse(await readFile(SETTINGS, 'utf8')) : {}) };
 
 // ── Events (SSE) ─────────────────────────────────────────────────────────────
 const clients = new Set();
@@ -141,34 +141,42 @@ app.put('/api/items/:type/:id', wrap(async (req, res) => {
     await rename(old.file, file);
     // Carry the assets along when the directory changes.
     if (path.dirname(old.file) !== path.dirname(file)) {
-      for (const f of collections[t].fields) {
-        const v = data[f.name];
-        if (['image', 'file'].includes(f.kind) && v && !v.startsWith('upload:') && (await exists(path.join(old.dir, v)))) {
-          await rename(path.join(old.dir, v), path.join(path.dirname(file), v));
-        }
+      const moves = [];
+      forEachAsset(t, data, (v) => { if (!v.startsWith('upload:')) moves.push(v); });
+      for (const v of moves) {
+        if (await exists(path.join(old.dir, v))) await rename(path.join(old.dir, v), path.join(path.dirname(file), v));
       }
     }
   } else if (!from && (await exists(file))) {
     return res.status(409).json({ error: `an item already exists at ${id}` });
   }
 
+  // Move fresh uploads into the item's directory as <slug>[-<n>].<ext>.
   const slug = id.split('/').pop();
-  for (const f of collections[t].fields) {
-    const v = data[f.name];
-    if (!['image', 'file'].includes(f.kind) || !v?.startsWith?.('upload:')) continue;
+  const pending = [];
+  forEachAsset(t, data, (v, set, f, i) => { if (typeof v === 'string' && v.startsWith('upload:')) pending.push({ v, set, i }); });
+  for (const { v, set, i } of pending) {
     const src = path.join(UPLOADS, path.basename(v.slice(7)));
     if (!(await exists(src))) return res.status(400).json({ error: `upload ${v} has expired` });
-    const name = `${slug}${path.extname(src)}`;
+    const name = `${slug}${i === null ? '' : `-${i + 1}`}${path.extname(src)}`;
     await mkdir(path.dirname(file), { recursive: true });
     await rm(path.join(path.dirname(file), name), { force: true });
     await rename(src, path.join(path.dirname(file), name));
-    data[f.name] = name;
+    set(name);
   }
 
   const item = await saveItem(t, id, data, body);
   emit('items-changed', { type: t, id });
   res.json({ ...summary(item), body: item.body });
-  afterChange(`save ${t}/${id}`).catch(() => {});
+  const isNew = !from;
+  if (isNew && settings.autoAnnounce && t === 'news' && announceable(t) && at.status().loggedIn) {
+    // New news goes out on its own; the announce pipeline publishes the site itself.
+    announceItem(t, id, { post: true })
+      .then((r) => emit('announced', { type: t, id, ...r }))
+      .catch((err) => emit('error', { where: 'announce', message: err.message }));
+  } else {
+    afterChange(`save ${t}/${id}`).catch(() => {});
+  }
 }));
 
 app.delete('/api/items/:type/:id', wrap(async (req, res) => {
@@ -239,20 +247,65 @@ app.get('/api/atproto/preview/:type/:id', wrap(async (req, res) => {
 // Publish an item to ATProto: make sure the page is live first (the post links
 // to it), create the records, remember their URIs, then rebuild and push again
 // so the page carries its <link rel="site.standard.document">.
-app.post('/api/atproto/publish/:type/:id', wrap(async (req, res) => {
-  const t = type(req);
-  const item = await loadItem(t, req.params.id);
-  if (!item) return res.status(404).json({ error: 'not found' });
-  if (!collections[t].fields.some((f) => f.name === 'atUri')) return res.status(400).json({ error: `${t} cannot be published to ATProto` });
-  const { post = true, text } = req.body || {};
-  await doPublish(`pre-announce ${t}/${item.id}`);
+const announceable = (t) => collections[t].fields.some((f) => f.name === 'atUri');
+
+async function recordItem(t, id, { post, text }) {
+  const item = await loadItem(t, id);
+  if (!item) throw Object.assign(new Error('not found'), { status: 404 });
   const r = await at.publishDocument(item, { post, text });
   const data = { ...item.data, atUri: r.atUri };
   if (r.bskyUri) { data.bskyUri = r.bskyUri; data.bskyCid = r.bskyCid; }
   await saveItem(t, item.id, data, item.body);
   emit('items-changed', { type: t, id: item.id });
-  await doPublish(`announce ${t}/${item.id}`);
-  res.json({ ...r, bskyWebUrl: r.bskyUri ? at.bskyWebUrl(r.bskyUri, at.status().handle) : null });
+  return { ...r, bskyWebUrl: r.bskyUri ? at.bskyWebUrl(r.bskyUri, at.status().handle) : null };
+}
+
+async function announceItem(t, id, opts) {
+  if (!announceable(t)) throw Object.assign(new Error(`${t} cannot be published to ATProto`), { status: 400 });
+  await doPublish(`pre-announce ${t}/${id}`);
+  const r = await recordItem(t, id, opts);
+  await doPublish(`announce ${t}/${id}`);
+  return r;
+}
+
+app.post('/api/atproto/publish/:type/:id', wrap(async (req, res) => {
+  const { post = true, text } = req.body || {};
+  res.json(await announceItem(type(req), req.params.id, { post, text }));
+}));
+
+// Backfill: create standard.site records for every item that has none.
+// Posting each to Bluesky is opt-in (it floods the timeline). Progress goes
+// out over SSE; the site is pushed once at the start and once at the end.
+app.post('/api/atproto/backfill', wrap(async (req, res) => {
+  const { types = ['news', 'reports'], post = false } = req.body || {};
+  const todo = [];
+  for (const t of types) {
+    if (!collections[t] || !announceable(t)) continue;
+    for (const item of await loadCollection(t)) if (!item.data.atUri) todo.push({ type: t, id: item.id, title: item.title });
+  }
+  // Oldest first, so posts (if any) land in chronological order.
+  todo.reverse();
+  res.json({ queued: todo.length });
+  if (!todo.length) return;
+  try {
+    await doPublish('pre-backfill');
+    const done = [];
+    const failed = [];
+    for (const [i, { type: t, id, title }] of todo.entries()) {
+      emit('backfill', { step: i + 1, total: todo.length, title, status: 'working' });
+      try {
+        done.push(await recordItem(t, id, { post }));
+        emit('backfill', { step: i + 1, total: todo.length, title, status: 'done' });
+      } catch (err) {
+        failed.push({ id, error: err.message });
+        emit('backfill', { step: i + 1, total: todo.length, title, status: 'failed', error: err.message });
+      }
+    }
+    await doPublish('backfill');
+    emit('backfill', { finished: true, done: done.length, failed });
+  } catch (err) {
+    emit('error', { where: 'backfill', message: err.message });
+  }
 }));
 
 // ── Admin UI ─────────────────────────────────────────────────────────────────

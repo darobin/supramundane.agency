@@ -127,6 +127,13 @@ export async function ensurePublication({ iconFile } = {}) {
 
 // Publish an item (news, report) as a site.standard.document; optionally
 // announce it on Bluesky and cross-link the two. Returns { atUri, bskyUri }.
+//
+// The Bluesky affordance ("read on <publication>", the source line, the
+// theme) comes from the appview hydrating `external.associatedRefs`: strong
+// refs (uri + cid) to the document and its publication, which it validates
+// against the link (publication.url + document.path). Order matters and is
+// the same as Leaflet's: write the document, pin its cid in the post, then
+// point the document back at the post.
 export async function publishDocument(item, { post = true, text, siteConfig } = {}) {
   const a = need();
   const site = siteConfig || (await loadSite());
@@ -141,7 +148,7 @@ export async function publishDocument(item, { post = true, text, siteConfig } = 
     site: site.publicationUri,
     path: item.url.replace(/\/$/, ''),
     title: item.title,
-    description: item.data.description,
+    description: plain(item.data.description),
     publishedAt: isoDateTime(item.data.date),
     updatedAt: new Date().toISOString(),
     tags: item.data.tags || [],
@@ -151,14 +158,9 @@ export async function publishDocument(item, { post = true, text, siteConfig } = 
   if (cover) record.coverImage = cover;
   if (item.data.bskyUri && item.data.bskyCid) record.bskyPostRef = { uri: item.data.bskyUri, cid: item.data.bskyCid };
 
-  let atUri = item.data.atUri;
-  if (atUri) {
-    const { rkey } = parseAtUri(atUri);
-    await a.com.atproto.repo.putRecord({ repo: a.session.did, collection: 'site.standard.document', rkey, record });
-  } else {
-    const res = await a.com.atproto.repo.createRecord({ repo: a.session.did, collection: 'site.standard.document', record });
-    atUri = res.data.uri;
-  }
+  const docRef = await writeDocument(a, item.data.atUri, record);
+  const atUri = docRef.uri;
+  const pubRef = await strongRef(a, site.publicationUri);
 
   let bskyUri = item.data.bskyUri;
   let bskyCid = item.data.bskyCid;
@@ -170,25 +172,66 @@ export async function publishDocument(item, { post = true, text, siteConfig } = 
       facets: rt.facets,
       embed: {
         $type: 'app.bsky.embed.external',
-        external: { uri: pageUrl, title: item.title, description: item.data.description, ...(cover ? { thumb: cover } : {}) },
+        external: {
+          uri: pageUrl, title: item.title, description: plain(item.data.description),
+          ...(cover ? { thumb: cover } : {}),
+          associatedRefs: [docRef, pubRef],
+        },
       },
       createdAt: new Date().toISOString(),
     });
     bskyUri = res.uri;
     bskyCid = res.cid;
+  } else if (bskyUri) {
+    // An existing post: make sure it pins the current document/publication.
+    const repaired = await repairPost(a, bskyUri, docRef, pubRef);
+    if (repaired) bskyCid = repaired.cid;
+  }
+
+  if (bskyUri && (bskyUri !== item.data.bskyUri || bskyCid !== item.data.bskyCid || !item.data.atUri)) {
     // Cross-link so standard.site readers find the conversation.
-    const { rkey } = parseAtUri(atUri);
-    await a.com.atproto.repo.putRecord({
-      repo: a.session.did, collection: 'site.standard.document', rkey,
-      record: { ...record, bskyPostRef: { uri: bskyUri, cid: bskyCid } },
-    });
+    await writeDocument(a, atUri, { ...record, bskyPostRef: { uri: bskyUri, cid: bskyCid } });
   }
   return { atUri, bskyUri, bskyCid, pageUrl };
 }
 
+// Create or replace the document record; returns its strong ref.
+async function writeDocument(a, atUri, record) {
+  if (atUri) {
+    const { rkey } = parseAtUri(atUri);
+    const res = await a.com.atproto.repo.putRecord({ repo: a.session.did, collection: 'site.standard.document', rkey, record });
+    return { uri: res.data.uri, cid: res.data.cid };
+  }
+  const res = await a.com.atproto.repo.createRecord({ repo: a.session.did, collection: 'site.standard.document', record });
+  return { uri: res.data.uri, cid: res.data.cid };
+}
+
+async function strongRef(a, uri) {
+  const { did, collection, rkey } = parseAtUri(uri);
+  const res = await a.com.atproto.repo.getRecord({ repo: did, collection, rkey });
+  return { uri: res.data.uri, cid: res.data.cid };
+}
+
+// Add associatedRefs to a post that was made without them (or whose refs are
+// stale). Returns the new strong ref of the post, or null if nothing changed.
+async function repairPost(a, postUri, docRef, pubRef) {
+  const { rkey } = parseAtUri(postUri);
+  const res = await a.com.atproto.repo.getRecord({ repo: a.session.did, collection: 'app.bsky.feed.post', rkey });
+  const post = res.data.value;
+  const external = post?.embed?.external;
+  if (!external) return null;
+  const want = [docRef, pubRef];
+  const have = external.associatedRefs || [];
+  const same = have.length === want.length && want.every((w) => have.some((h) => h.uri === w.uri && h.cid === w.cid));
+  if (same) return null;
+  const updated = { ...post, embed: { ...post.embed, external: { ...external, associatedRefs: want } } };
+  const put = await a.com.atproto.repo.putRecord({ repo: a.session.did, collection: 'app.bsky.feed.post', rkey, record: updated });
+  return { uri: put.data.uri, cid: put.data.cid };
+}
+
 export function defaultPostText(item, pageUrl) {
   const max = 300;
-  let text = `${item.title}\n\n${item.data.description}`;
+  let text = `${item.title}\n\n${plain(item.data.description)}`;
   const tail = `\n\n${pageUrl}`;
   if ([...text].length + [...tail].length > max) text = [...text].slice(0, max - [...tail].length - 1).join('') + '…';
   return text + tail;

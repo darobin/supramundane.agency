@@ -10,12 +10,13 @@ const options = {
   target: 'es2022',
   outdir: path.join(ROOT, 'cms/ui/dist'),
   sourcemap: true,
+  minify: true,
   logLevel: 'info',
 };
 
 export async function bundle({ watch = false } = {}) {
   if (watch) {
-    const ctx = await esbuild.context(options);
+    const ctx = await esbuild.context({ ...options, minify: false });
     await ctx.watch();
     return ctx;
   }

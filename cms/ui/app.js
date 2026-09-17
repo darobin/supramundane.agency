@@ -11,28 +11,30 @@ import './site.js';
 
 export class App extends SignalWatcher(LitElement) {
   static styles = [base, css`
-    :host { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; }
-    @media (max-width: 800px) { :host { grid-template-columns: 1fr; } aside { position: static !important; height: auto !important; } }
-    aside { background: var(--ink); color: #ddd; padding: 1.25rem 1rem; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 1rem; }
-    aside .brand { font-family: "Cormorant", Georgia, serif; font-size: 1.35rem; color: #fff; text-decoration: none; letter-spacing: 0.02em; }
+    :host { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100vh; }
+    @media (max-width: 800px) { :host { grid-template-columns: 1fr; } aside { position: static !important; height: auto !important; border-right: none !important; border-bottom: 2px solid var(--line); } }
+    aside { background: var(--panel); color: var(--ink); padding: 1.25rem 1rem; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 1rem; border-right: 2px solid var(--line); }
+    aside .brand { font-family: "Cormorant", Georgia, serif; font-size: 1.5rem; color: var(--ink); text-decoration: none; letter-spacing: 0.02em; line-height: 1.1; }
     aside .brand em { font-style: italic; }
-    aside nav a { display: block; color: #cfcfcf; text-decoration: none; padding: 0.4rem 0.6rem; border-radius: var(--radius); font-size: 0.95rem; }
-    aside nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    aside nav a.active { background: var(--accent); color: #fff; }
-    aside nav a .n { float: right; opacity: 0.6; font-size: 0.8rem; }
-    aside hr { border: none; border-top: 1px solid rgba(255,255,255,0.12); margin: 0.25rem 0; }
+    aside .brand small { display: block; font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 0.3rem; color: var(--muted); }
+    aside nav { display: flex; flex-direction: column; gap: 2px; }
+    aside nav a { display: block; color: var(--ink); text-decoration: none; padding: 0.45rem 0.6rem; font-weight: 700; border: 2px solid transparent; }
+    aside nav a:hover { border-color: var(--line); }
+    aside nav a.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    aside nav a .n { float: right; font-family: var(--mono); font-size: 0.75rem; font-weight: 400; opacity: 0.7; }
+    aside nav a.active .n { opacity: 1; }
+    aside hr { border: none; border-top: 2px solid var(--line); margin: 0.5rem 0; }
     aside .grow { flex: 1; }
-    .publish { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem; color: #aaa; }
+    .publish { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.8rem; color: var(--muted); }
     .publish button { width: 100%; justify-content: center; }
-    .publish button.primary { background: var(--accent); border-color: var(--accent); }
-    .publish label { display: flex; gap: 0.4rem; align-items: center; cursor: pointer; }
-    .publish .status { line-height: 1.4; }
-    .publish .status strong { color: #eee; font-weight: 500; }
-    main { padding: 1.5rem 2rem 4rem; max-width: 1100px; width: 100%; }
-    .toast { position: fixed; bottom: 1.25rem; right: 1.25rem; background: var(--ink); color: #fff; padding: 0.7rem 1rem; border-radius: var(--radius); box-shadow: 0 6px 24px rgba(0,0,0,0.25); max-width: 420px; z-index: 20; font-size: 0.9rem; }
-    .toast.error { background: var(--danger); }
-    .toast.success { background: var(--accent-ink); }
-    .log { font-family: var(--mono); font-size: 0.7rem; color: #999; max-height: 6rem; overflow: auto; white-space: pre-wrap; }
+    .publish label { display: flex; gap: 0.4rem; align-items: center; cursor: pointer; color: var(--ink); }
+    .publish .status { line-height: 1.5; font-family: var(--mono); font-size: 0.7rem; }
+    .publish .status strong { color: var(--ink); }
+    main { padding: 2rem 2.5rem 5rem; width: 100%; }
+    .toast { position: fixed; bottom: 1.25rem; right: 1.25rem; background: var(--ink); color: #fff; padding: 0.8rem 1.1rem; box-shadow: 4px 4px 0 var(--accent); max-width: 460px; z-index: 20; font-weight: 700; }
+    .toast.error { background: var(--danger); box-shadow: 4px 4px 0 var(--ink); }
+    .toast.success { background: var(--accent); box-shadow: 4px 4px 0 var(--ink); }
+    .log { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); max-height: 6rem; overflow: auto; white-space: pre-wrap; border-top: 2px solid var(--line); padding-top: 0.4rem; }
   `];
 
   connectedCallback() {
@@ -58,7 +60,7 @@ export class App extends SignalWatcher(LitElement) {
     const active = (view, type) => (r.view === view && (!type || r.type === type)) || (view === 'list' && r.view === 'edit' && r.type === type) ? 'active' : '';
     return html`
       <aside>
-        <a class="brand" href="#/">supramundane <em>agency</em>.</a>
+        <a class="brand" href="#/">supramundane <em>agency</em>.<small>content</small></a>
         <nav>
           ${Object.entries(collections).map(([type, col]) => html`
             <a class=${active('list', type)} href=${hashFor({ view: 'list', type })}>${col.label} <span class="n">${(s.items[type] || []).length}</span></a>`)}
@@ -71,11 +73,12 @@ export class App extends SignalWatcher(LitElement) {
         <div class="grow"></div>
         <div class="publish">
           <button class="primary" ?disabled=${s.busy.publish} @click=${() => send({ type: 'publish' })}>${s.busy.publish ? 'Publishing…' : 'Publish site'}</button>
-          <label><input type="checkbox" .checked=${s.settings.autoPublish} @change=${(e) => send({ type: 'settings/autoPublish', value: e.target.checked })}> auto-publish on save</label>
+          <label><input type="checkbox" .checked=${s.settings.autoPublish} @change=${(e) => send({ type: 'settings/set-flag', key: 'autoPublish', value: e.target.checked })}> auto-publish on save</label>
+          <label title="New news items are pushed live, recorded on standard.site, and posted to Bluesky as soon as they are created"><input type="checkbox" .checked=${s.settings.autoAnnounce} ?disabled=${!s.atproto.loggedIn || !s.site.publicationUri} @change=${(e) => send({ type: 'settings/set-flag', key: 'autoAnnounce', value: e.target.checked })}> auto-announce new news</label>
           <div class="status">
             ${s.lastBuild ? html`preview built <strong>${ago(s.lastBuild.at)}</strong><br>` : ''}
             ${s.lastPublish ? html`live since <strong>${ago(s.lastPublish.at)}</strong> (${s.lastPublish.changed} changes)` : html`not published this session`}
-            ${s.deploy?.host ? html`<br>→ ${s.deploy.target}` : html`<br><span style="color:var(--today)">SUPRAMUNDANE not set — cannot publish</span>`}
+            ${s.deploy?.host ? html`<br>→ ${s.deploy.target}` : html`<br><span style="color:var(--danger)">SUPRAMUNDANE not set — cannot publish</span>`}
           </div>
           ${s.log.length ? html`<div class="log">${s.log.slice(-8).join('\n')}</div>` : ''}
         </div>

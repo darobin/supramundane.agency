@@ -1,33 +1,38 @@
 // <sm-editor>: a form generated from the collection schema, with the news
 // item flow front and centre: title → date → drop an image → describe → save.
+// Widgets are value/setter based so they nest inside `list` fields.
 import { LitElement, html, css, nothing } from 'lit';
 import { SignalWatcher } from '@lit-labs/signals';
-import { base } from './styles.js';
+import { base, richText } from './styles.js';
 import { appStore, send, allTags, editorId, hashFor } from './store.js';
 import { api } from './api.js';
 import { collections, titleOf } from '../../lib/schema.js';
 import './image-crop.js';
 import './fields.js';
+import './rich.js';
 import './announce.js';
 
 export class Editor extends SignalWatcher(LitElement) {
-  static styles = [base, css`
+  static styles = [base, richText, css`
     :host { display: block; }
     .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    .head .actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-    .grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 1.5rem; align-items: start; }
+    .head .actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 2rem; align-items: start; }
     @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-    .side .panel { margin-bottom: 1rem; }
+    .side .panel { margin-bottom: 1.5rem; }
     .url { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); word-break: break-all; }
-    .url input { font-family: var(--mono); font-size: 0.85rem; padding: 0.25rem 0.4rem; width: auto; min-width: 12rem; }
-    .dirty { color: var(--warn); font-size: 0.85rem; }
+    .url input { font-family: var(--mono); font-size: 0.85rem; padding: 0.2rem 0.4rem; width: auto; min-width: 12rem; border-width: 1.5px; }
+    .dirty { color: var(--accent); font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
     .cropped { max-width: 560px; }
-    .cropped img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    .cropped img { display: block; width: 100%; height: auto; border: 2px solid var(--line); }
     .cropped .row { margin-top: 0.4rem; }
     .readonly { font-size: 0.85rem; margin-bottom: 0.6rem; word-break: break-all; }
     .readonly .name { font-weight: 600; display: block; }
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+    .list-item { border: 2px solid var(--line); padding: 1rem 1rem 0; margin-bottom: 0.9rem; background: var(--panel); }
+    .list-item .bar { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem; font-size: 0.85rem; }
+    .list-item .bar strong { flex: 1; }
+    .list-item .bar button { padding: 0.2rem 0.5rem; font-size: 0.8rem; }
+    .list-add { margin-bottom: 0.5rem; }
   `];
 
   render() {
@@ -44,6 +49,9 @@ export class Editor extends SignalWatcher(LitElement) {
     const main = schema.fields.filter((f) => !['readonly'].includes(f.kind) && !SIDE.has(f.name));
     const side = schema.fields.filter((f) => f.kind !== 'readonly' && SIDE.has(f.name));
     const ro = schema.fields.filter((f) => f.kind === 'readonly' && ed.data[f.name]);
+    // Where this item's existing assets can be previewed from.
+    const assetBase = ed.from ? `${s.previewUrl}${col.urlPrefix}${ed.from.split('/').slice(0, -1).map((p) => `${p}/`).join('')}` : '';
+    const top = (f) => this._field(f, ed.data[f.name], (value, preview) => send({ type: 'edit/field', name: f.name, value, preview }), { ed, s, assetBase, preview: ed.previews[f.name], key: f.name });
 
     return html`
       <div class="head">
@@ -63,12 +71,12 @@ export class Editor extends SignalWatcher(LitElement) {
       </div>
       ${ed.problems.length ? html`<div class="problems">${ed.problems.map((p) => html`<div>${p}</div>`)}</div>` : ''}
       <div class="grid">
-        <div class="panel main">${main.map((f) => this._field(f, ed, s))}</div>
+        <div class="panel main">${main.map(top)}</div>
         <div class="side">
-          ${side.length ? html`<div class="panel">${side.map((f) => this._field(f, ed, s))}</div>` : ''}
+          ${side.length ? html`<div class="panel">${side.map(top)}</div>` : ''}
           ${announceable && !ed.isNew ? html`<div class="panel">
             <h3>Announce</h3>
-            ${ro.map((f) => html`<div class="readonly"><span class="name">${f.label || f.name}</span>${this._roValue(f, ed, s)}</div>`)}
+            ${ro.map((f) => html`<div class="readonly"><span class="name">${f.label || f.name}</span>${this._roValue(f, ed)}</div>`)}
             ${!s.atproto.loggedIn ? html`<p class="muted">Log in on the <a href="#/atproto">ATProto page</a> to publish this to standard.site and Bluesky.</p>`
               : !s.site.publicationUri ? html`<p class="muted">Create the publication record on the <a href="#/atproto">ATProto page</a> first.</p>`
               : ed.data.atUri ? html`<p class="muted">Published to ATProto${ed.data.bskyUri ? ' and posted to Bluesky' : ''}.</p>
@@ -81,7 +89,7 @@ export class Editor extends SignalWatcher(LitElement) {
     `;
   }
 
-  _roValue(f, ed, s) {
+  _roValue(f, ed) {
     const v = ed.data[f.name];
     if (f.name === 'bskyUri') {
       const m = v.match(/^at:\/\/([^/]+)\/[^/]+\/([^/]+)$/);
@@ -90,10 +98,11 @@ export class Editor extends SignalWatcher(LitElement) {
     return html`<span class="mono">${v}</span>`;
   }
 
-  _field(f, ed, s) {
-    const v = ed.data[f.name];
+  // One field. `set(value, preview?)` writes back; ctx carries the editor
+  // state, asset base URL, a fresh-upload preview, and a unique key.
+  _field(f, v, set, ctx) {
+    const { ed, s, assetBase, key } = ctx;
     const label = f.label || f.name.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
-    const set = (value, preview) => send({ type: 'edit/field', name: f.name, value, preview });
     const head = html`<span class="name">${label}${f.required ? html` <span class="req">*</span>` : ''}</span>`;
     const help = f.help ? html`<div class="help">${f.help}</div>` : '';
     switch (f.kind) {
@@ -108,9 +117,9 @@ export class Editor extends SignalWatcher(LitElement) {
       case 'boolean':
         return html`<label class="field"><span class="row"><input type="checkbox" .checked=${!!v} @change=${(e) => set(e.target.checked)}> <span class="name" style="margin:0">${label}</span></span>${help}</label>`;
       case 'text':
-        return html`<label class="field">${head}<textarea rows="3" .value=${v || ''} @input=${(e) => set(e.target.value)}></textarea>${help}</label>`;
+        return html`<div class="field">${head}<sm-rich mode="inline" .value=${v || ''} @change=${(e) => set(e.detail.value)}></sm-rich>${help}</div>`;
       case 'markdown':
-        return html`<label class="field">${head}<textarea class="markdown" .value=${ed.body} @input=${(e) => send({ type: 'edit/body', value: e.target.value })}></textarea><div class="help">Markdown. Links to other pages can be relative, e.g. <span class="mono">/reports/…/</span>.</div></label>`;
+        return html`<div class="field">${head}<sm-rich mode="block" .value=${ed.body} @change=${(e) => send({ type: 'edit/body', value: e.detail.value })}></sm-rich>${help}</div>`;
       case 'tags':
         return html`<div class="field">${head}<sm-tags .value=${v || []} .suggestions=${allTags.get()} @change=${(e) => set(e.detail.value)}></sm-tags>${help}</div>`;
       case 'refs': {
@@ -118,29 +127,48 @@ export class Editor extends SignalWatcher(LitElement) {
         return html`<div class="field">${head}<sm-refs .value=${v} .options=${opts} ?single=${!!f.single} placeholder=${label.toLowerCase()} @change=${(e) => set(e.detail.value)}></sm-refs>${help}</div>`;
       }
       case 'image': {
-        const preview = ed.previews[f.name];
-        const current = preview || (v && !String(v).startsWith('upload:') && ed.from ? `${s.previewUrl}${collections[ed.type].urlPrefix}${ed.from.split('/').slice(0, -1).map((p) => `${p}/`).join('')}${v}` : '');
+        const preview = ctx.preview;
+        const current = preview || (v && !String(v).startsWith('upload:') && assetBase ? `${assetBase}${v}` : '');
+        const replacing = this._replacing?.[key];
         return html`<div class="field">${head}
-          ${current && !this._replacing?.[f.name]
-            ? html`<div class="cropped"><img src=${current} alt=""><div class="row"><button @click=${() => { this._replacing = { ...(this._replacing || {}), [f.name]: true }; this.requestUpdate(); }}>Replace image</button>${preview ? html`<span class="pill ok">new crop, saved with the item</span>` : ''}</div></div>`
+          ${current && !replacing
+            ? html`<div class="cropped"><img src=${current} alt=""><div class="row"><button @click=${() => { this._replacing = { ...(this._replacing || {}), [key]: true }; this.requestUpdate(); }}>Replace image</button>${preview ? html`<span class="pill ok">new crop, saved with the item</span>` : ''}</div></div>`
             : html`<sm-image-crop width=${f.size.width} height=${f.size.height} current=${current || ''}
-                @crop=${(e) => this._upload(f, e.detail, set)}></sm-image-crop>`}
+                @crop=${(e) => this._upload(key, e.detail, set)}></sm-image-crop>`}
           ${help}</div>`;
       }
       case 'file': {
-        const currentUrl = v && !String(v).startsWith('upload:') && ed.from ? `${s.previewUrl}${collections[ed.type].urlPrefix}${ed.from.split('/').slice(0, -1).map((p) => `${p}/`).join('')}${v}` : '';
-        return html`<div class="field">${head}<sm-file-drop accept=${f.accept || ''} current=${v && !String(v).startsWith('upload:') ? v : ''} currentUrl=${currentUrl} @file=${(e) => this._upload(f, e.detail, set)}></sm-file-drop>${help}</div>`;
+        const isUpload = v && String(v).startsWith('upload:');
+        const currentUrl = v && !isUpload && assetBase ? `${assetBase}${v}` : '';
+        return html`<div class="field">${head}<sm-file-drop accept=${f.accept || ''} current=${v && !isUpload ? v : ''} currentUrl=${currentUrl} pending=${isUpload ? 'new file, saved with the item' : ''} @file=${(e) => this._upload(key, e.detail, set)}></sm-file-drop>${help}</div>`;
+      }
+      case 'list': {
+        const items = Array.isArray(v) ? v : [];
+        const setItems = (next) => set(next);
+        const update = (i, patch) => setItems(items.map((it, j) => (j === i ? { ...it, ...patch } : it)));
+        const move = (i, d) => { const n = [...items]; const [it] = n.splice(i, 1); n.splice(i + d, 0, it); setItems(n); };
+        return html`<div class="field">${head}${help}
+          ${items.map((it, i) => html`<div class="list-item">
+            <div class="bar"><strong>${label.replace(/s$/, '')} ${i + 1}</strong>
+              <button title="move up" ?disabled=${i === 0} @click=${() => move(i, -1)}>↑</button>
+              <button title="move down" ?disabled=${i === items.length - 1} @click=${() => move(i, 1)}>↓</button>
+              <button class="danger" @click=${() => setItems(items.filter((_, j) => j !== i))}>Remove</button>
+            </div>
+            ${f.fields.map((sf) => this._field(sf, it?.[sf.name], (value, preview) => update(i, { [sf.name]: value }), { ...ctx, key: `${key}.${i}.${sf.name}`, preview: undefined }))}
+          </div>`)}
+          <button class="list-add" @click=${() => setItems([...items, {}])}>+ Add ${f.itemLabel || 'item'}</button>
+        </div>`;
       }
       default:
         return nothing;
     }
   }
 
-  async _upload(f, { blob, preview, filename }, set) {
+  async _upload(key, { blob, preview, filename }, set) {
     try {
       const { token } = await api.upload(blob, filename);
       set(token, preview);
-      if (this._replacing) { delete this._replacing[f.name]; this.requestUpdate(); }
+      if (this._replacing) { delete this._replacing[key]; this.requestUpdate(); }
     } catch (err) {
       send({ type: 'toast', message: `Upload failed: ${err.message}`, kind: 'error' });
     }
@@ -153,6 +181,6 @@ export class Editor extends SignalWatcher(LitElement) {
 }
 
 // Fields that go in the right-hand column.
-const SIDE = new Set(['tags', 'people', 'video', 'report', 'location', 'event', 'publisher', 'order', 'website', 'bluesky', 'email', 'nav']);
+const SIDE = new Set(['tags', 'people', 'video', 'report', 'location', 'event', 'publisher', 'order', 'website', 'bluesky', 'email', 'nav', 'link']);
 
 customElements.define('sm-editor', Editor);

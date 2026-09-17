@@ -8,22 +8,22 @@ import { collections } from '../../lib/schema.js';
 
 export class List extends SignalWatcher(LitElement) {
   static styles = [base, css`
-    .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-    th, td { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
-    th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+    .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); border: 2px solid var(--line); box-shadow: var(--shadow); }
+    th, td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--line); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
-    tr.today td { background: #fff8e6; }
-    td.thumb { width: 88px; }
-    td.thumb img { display: block; width: 80px; height: auto; border-radius: 3px; }
-    td.thumb img.square { width: 44px; }
-    td.date { white-space: nowrap; font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
-    td.title a { color: inherit; text-decoration: none; font-weight: 600; }
-    td.title a:hover { text-decoration: underline; }
-    td.title .desc { display: block; color: var(--muted); font-size: 0.85rem; font-weight: normal; margin-top: 0.15rem; }
+    tr.today td { background: var(--today); }
+    td.thumb { width: 100px; }
+    td.thumb img { display: block; width: 88px; height: auto; border: 1.5px solid var(--line); }
+    td.thumb img.square { width: 48px; }
+    td.date { white-space: nowrap; font-family: var(--mono); font-size: 0.8rem; }
+    td.title a { color: inherit; text-decoration: none; font-weight: 700; font-size: 1.05rem; }
+    td.title a:hover { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; }
+    td.title .desc { display: block; color: var(--muted); font-size: 0.85rem; font-weight: normal; margin-top: 0.15rem; max-width: 70ch; }
     td.flags { white-space: nowrap; text-align: right; }
-    h3 { margin: 1.5rem 0 0.5rem; }
-    .empty { color: var(--muted); padding: 2rem; text-align: center; background: var(--panel); border: 1px dashed var(--line); border-radius: var(--radius); }
+    td.flags a { text-decoration: none; font-weight: 700; }
+    h3 { margin: 2rem 0 0.6rem; }
+    .empty { color: var(--muted); padding: 2rem; text-align: center; background: var(--panel); border: 2px dashed var(--line); }
   `];
 
   render() {

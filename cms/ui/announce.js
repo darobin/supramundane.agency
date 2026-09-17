@@ -7,8 +7,8 @@ import { appStore, send } from './store.js';
 
 export class Announce extends SignalWatcher(LitElement) {
   static styles = [base, css`
-    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 10; padding: 1rem; }
-    .dialog { background: var(--panel); border-radius: var(--radius); padding: 1.5rem; width: 100%; max-width: 560px; max-height: 90vh; overflow: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .backdrop { position: fixed; inset: 0; background: rgba(101,60,237,0.25); display: flex; align-items: center; justify-content: center; z-index: 10; padding: 1rem; }
+    .dialog { background: var(--panel); border: 2px solid var(--line); padding: 1.5rem; width: 100%; max-width: 600px; max-height: 90vh; overflow: auto; box-shadow: 8px 8px 0 var(--line); }
     textarea { min-height: 9rem; }
     .count { text-align: right; font-size: 0.8rem; color: var(--muted); }
     .count.over { color: var(--danger); }

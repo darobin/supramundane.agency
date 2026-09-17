@@ -7,16 +7,17 @@ export class FileDrop extends LitElement {
     accept: { type: String },
     current: { type: String },     // existing filename
     currentUrl: { type: String },  // where it can be opened
+    pending: { type: String },     // label when a fresh upload is waiting to be saved
     _over: { state: true },
     _busy: { state: true },
     _pending: { state: true },
   };
   static styles = [base, css`
     .zone {
-      border: 2px dashed var(--line); border-radius: var(--radius); padding: 1rem; text-align: center;
+      border: 2px dashed var(--line); padding: 1rem; text-align: center;
       color: var(--muted); font-size: 0.9rem; cursor: pointer; background: var(--panel);
     }
-    .zone.over { border-color: var(--accent); background: #eaf5ec; }
+    .zone.over { border-color: var(--accent); background: #efeafd; }
     .zone strong { color: var(--ink); }
     .current { margin-top: 0.4rem; font-size: 0.85rem; }
     input[type=file] { display: none; }
@@ -30,7 +31,7 @@ export class FileDrop extends LitElement {
         @click=${() => this.renderRoot.querySelector('input').click()}>
         ${this._busy ? 'Uploading…' : html`<strong>Drop a file here</strong> or click to choose${this.accept ? html` <span class="mono">(${this.accept})</span>` : ''}`}
       </div>
-      ${this._pending ? html`<div class="current">Ready: <span class="mono">${this._pending}</span> — saved with the item</div>`
+      ${this._pending || this.pending ? html`<div class="current">Ready: <span class="mono">${this._pending || this.pending}</span> — saved with the item</div>`
         : this.current ? html`<div class="current">Current: ${this.currentUrl ? html`<a href=${this.currentUrl} target="_blank" class="mono">${this.current}</a>` : html`<span class="mono">${this.current}</span>`}</div>` : ''}
       <input type="file" accept=${this.accept || ''} @change=${(e) => { const f = e.target.files[0]; if (f) this._pick(f); e.target.value = ''; }}>
     `;
@@ -46,8 +47,8 @@ export class Tags extends LitElement {
   static properties = { value: { type: Array }, suggestions: { type: Array }, _text: { state: true } };
   static styles = [base, css`
     .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.4rem; }
-    .chip { background: var(--line); border-radius: 999px; padding: 0.1rem 0.3rem 0.1rem 0.7rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.2rem; }
-    .chip button { border: none; background: none; padding: 0 0.3rem; cursor: pointer; color: var(--muted); font-size: 1rem; line-height: 1; }
+    .chip { border: 1.5px solid var(--line); padding: 0.1rem 0.3rem 0.1rem 0.6rem; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.2rem; }
+    .chip button { border: none; background: none; padding: 0 0.3rem; cursor: pointer; color: var(--muted); font-size: 1rem; line-height: 1; box-shadow: none !important; transform: none !important; }
     .suggest { margin-top: 0.3rem; font-size: 0.8rem; color: var(--muted); }
     .suggest button { border: none; background: none; padding: 0 0.2rem; color: var(--accent-ink); cursor: pointer; font-size: inherit; text-decoration: underline; }
   `];

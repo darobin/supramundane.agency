@@ -8,7 +8,7 @@ description: >-
   that determine what is relevant to people.
 pdf: algorithmic-pluralism.pdf
 image: algorithmic-pluralism.jpg
-imageAlt: An abstract design from the report's cover.
+imageAlt: A geometric design suggesting pluralism
 publisher: Future of Technology Institute
 people:
   - robin

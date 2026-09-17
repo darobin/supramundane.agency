@@ -111,7 +111,10 @@ nav ul {
 }
 nav li {
   display: inline-block;
-  margin-left: 0.2rem;
+  margin-left: 1.1rem;
+}
+nav li:first-child {
+  margin-left: 0;
 }
 main {
   margin-bottom: 4rem;
@@ -122,6 +125,12 @@ footer {
   margin-top: 1rem;
   padding-bottom: 1rem;
   border-top: 1px dotted var(--highlight);
+}
+footer p {
+  margin: 0.4rem 0;
+}
+footer .sep {
+  color: var(--highlight);
 }
 a {
   color: inherit;
@@ -318,31 +327,66 @@ p.download .size {
   font-weight: normal;
   font-size: 0.8em;
 }
-ul.people-grid {
+ul.people-list {
   list-style: none;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
-  font-size: 1rem;
-  line-height: 1.2;
+  margin: 0;
 }
-ul.people-grid img {
-  width: 100%;
+ul.people-list > li {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+ul.people-list .portrait {
+  flex: 0 0 200px;
+  text-decoration: none;
+}
+ul.people-list img {
+  width: 200px;
   height: auto;
   display: block;
   border-bottom: 3px solid var(--highlight);
 }
-ul.people-grid h3 {
-  font-size: inherit;
-  margin: 0.5rem 0 0 0;
+ul.people-list .about {
+  flex: 1;
+  line-height: 1.3;
 }
-ul.people-grid p {
-  margin: 0.2rem 0 0 0;
-  font-size: 0.85rem;
+ul.people-list h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+}
+ul.people-list .role {
+  font-weight: 200;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+ul.people-list .about p {
+  margin: 0 0 0.6rem 0;
+}
+@media only screen and (max-width:650px) {
+  ul.people-list > li { flex-direction: column; }
 }
 img.portrait {
   width: 200px;
+}
+.intro {
+  margin-bottom: 1.5rem;
+}
+.clip {
+  clear: both;
+  margin-top: 2rem;
+}
+.clip h2 {
+  font-weight: bold;
+}
+.clip-description {
+  font-size: 0.95em;
+}
+p.download a.button.secondary {
+  font-weight: normal;
+  margin-left: 0.5rem;
 }
 .person .links, .people, .related, .source {
   clear: both;

@@ -29,8 +29,6 @@ function nav(ctx) {
   const items = [
     ['/', 'home'], ['/news/', 'news'], ['/videos/', 'videos'], ['/reports/', 'reports'], ['/people/', 'people'],
     ...ctx.pages.filter((p) => p.data.nav).map((p) => [p.url, p.data.title.toLowerCase()]),
-    ['https://berjon.com/', 'blog'],
-    [`mailto:${ctx.site.authorEmail}`, 'email'],
   ];
   return `<nav><ul>${items.map(([href, label]) => `<li><a href="${attr(href)}">${esc(label)}</a></li>`).join('')}</ul></nav>`;
 }
@@ -39,7 +37,7 @@ function nav(ctx) {
 export function layout(ctx, page) {
   const { site } = ctx;
   const title = page.title ? `${page.title} — ${site.title}` : site.title;
-  const description = page.description || site.description;
+  const description = plain(page.description || site.description);
   const abs = (u) => (u ? new URL(u, site.url).href : '');
   const image = abs(page.image || '/img/card.jpg');
   return `<!doctype html>
@@ -76,6 +74,7 @@ ${page.body}
 ${nav(ctx)}
 <footer>
   <p>${inline(site.footer || '')}</p>
+  <p class="contact">${site.authorEmail ? `<a href="mailto:${attr(site.authorEmail)}">${esc(site.authorEmail)}</a>` : ''}${site.authorUrl ? ` <span class="sep">⬩</span> <a href="${attr(site.authorUrl)}">${esc(site.authorName || site.authorUrl)}</a>` : ''} <span class="sep">⬩</span> <a href="/feed.atom">feed</a></p>
 </footer>
 <script src="/js/colours.js"></script>
 ${(page.scripts || []).map((s) => `<script src="${attr(s)}"></script>`).join('\n')}
@@ -104,17 +103,22 @@ function time(ymd, today) {
 
 export function card(item, ctx) {
   const img = imageUrl(item);
-  const kind = item.type === 'news' ? '' : ` <span class="kind">${item.type === 'videos' ? 'video' : 'report'}</span>`;
+  const clips = item.type === 'videos' ? (item.data.clips || []).length : 0;
+  const kind = item.type === 'news' ? '' : ` <span class="kind">${item.type === 'videos' ? (clips > 1 ? `${clips} videos` : 'video') : 'report'}</span>`;
   return `<li data-date="${item.data.date}"${item.data.date === ctx.today ? ' class="today"' : ''}>
   ${img ? `<a href="${item.url}"><img src="${attr(img)}" alt="${attr(item.data.imageAlt)}" width="560" height="350" loading="lazy"></a>` : ''}
   <h3><a href="${item.url}">${esc(item.title)}</a>${kind}</h3>
-  <p>${esc(item.data.description)}</p>
+  <p>${inline(item.data.description)}</p>
   <div class="meta">${location(item.data.location)}${time(item.data.date, ctx.today)}</div>
 </li>`;
 }
 
 export function cards(items, ctx) {
   return `<ol class="postlist">${items.map((i) => card(i, ctx)).join('\n')}</ol>`;
+}
+
+function intro(ctx, key) {
+  return ctx.site[key] ? `<div class="intro">${render(ctx.site[key])}</div>` : '';
 }
 
 function tagList(tags = []) {
@@ -148,17 +152,39 @@ export function embedFor(url) {
   return { kind: 'link', href: url };
 }
 
-export function videoPlayer(item) {
-  const embed = embedFor(item.data.url);
-  const poster = imageUrl(item);
-  if (item.data.file) {
-    return `<video controls preload="metadata" ${poster ? `poster="${attr(poster)}"` : ''} src="${attr(item.urlDir + item.data.file)}" class="player"></video>`;
+// One clip: { title?, url?, file?, description? }. The first clip gets the
+// entry's poster when self-hosted.
+export function clipPlayer(item, clip, i = 0) {
+  const embed = embedFor(clip.url);
+  const poster = i === 0 ? imageUrl(item) : '';
+  const title = clip.title || item.title;
+  if (clip.file) {
+    return `<video controls preload="metadata" ${poster ? `poster="${attr(poster)}"` : ''} src="${attr(item.urlDir + clip.file)}" class="player"></video>`;
   }
   if (embed?.kind === 'iframe') {
-    return `<div class="embed"><iframe src="${attr(embed.src)}" title="${attr(item.title)}" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;
+    return `<div class="embed"><iframe src="${attr(embed.src)}" title="${attr(title)}" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;
   }
   if (embed?.kind === 'link') return `<p><a href="${attr(embed.href)}">Watch the video</a></p>`;
   return '';
+}
+
+// All of an entry's clips: a single one plays inline; several get their own
+// headed sections.
+export function videoPlayer(item) {
+  const clips = item.data.clips || [];
+  if (clips.length <= 1) return clips[0] ? clipPlayer(item, clips[0], 0) : '';
+  return clips.map((c, i) => `<section class="clip">
+  <h2>${esc(c.title || `Part ${i + 1}`)}</h2>
+  ${clipPlayer(item, c, i)}
+  ${c.description ? `<p class="clip-description">${inline(c.description)}</p>` : ''}
+  ${c.url ? `<p class="source"><a href="${attr(c.url)}" rel="noopener">Watch at the source</a></p>` : ''}
+</section>`).join('\n');
+}
+
+function sourceLine(item) {
+  const clips = item.data.clips || [];
+  if (clips.length !== 1 || !clips[0].url) return '';
+  return `<p class="source"><a href="${attr(clips[0].url)}" rel="noopener">Watch at the source</a></p>`;
 }
 
 // ── Pages ────────────────────────────────────────────────────────────────────
@@ -181,7 +207,7 @@ ${section('news-previously', 'Previously', shown)}
 }
 
 export function newsIndex(ctx, items) {
-  const body = `<h2>All News</h2>${cards(items, ctx)}`;
+  const body = `<h2>All News</h2>${intro(ctx, 'introNews')}${cards(items, ctx)}`;
   return layout(ctx, { title: 'News', url: '/news/', body });
 }
 
@@ -215,9 +241,7 @@ function prevNext(prev, next) {
 }
 
 export function videosIndex(ctx, items) {
-  const body = `<h2>Videos</h2>
-<p>Talks, panels, and interviews.</p>
-${cards(items, ctx)}`;
+  const body = `<h2>Videos</h2>${intro(ctx, 'introVideos')}${cards(items, ctx)}`;
   return layout(ctx, { title: 'Videos', url: '/videos/', body });
 }
 
@@ -227,11 +251,11 @@ export function videoItem(ctx, item) {
   ${tagList(item.data.tags)}
   <h1>${esc(item.title)}</h1>
   <div class="meta">${item.data.event ? `${esc(item.data.event)} <span class="sep">⬩</span> ` : ''}${time(item.data.date, ctx.today)}</div>
+  <p class="lede">${inline(item.data.description)}</p>
   ${videoPlayer(item)}
-  <p class="lede">${esc(item.data.description)}</p>
   ${render(item.body)}
   ${peopleLine(item, ctx)}
-  ${item.data.url ? `<p class="source"><a href="${attr(item.data.url)}" rel="noopener">Watch at the source</a></p>` : ''}
+  ${sourceLine(item)}
   ${announced.length ? `<p class="related">See also: ${announced.map((n) => `<a href="${n.url}">${esc(n.title)}</a>`).join(', ')}</p>` : ''}
 </section>`;
   return layout(ctx, {
@@ -241,9 +265,7 @@ export function videoItem(ctx, item) {
 }
 
 export function reportsIndex(ctx, items) {
-  const body = `<h2>Reports</h2>
-<p>Longer-form work: white papers, studies, and position papers.</p>
-${cards(items, ctx)}`;
+  const body = `<h2>Reports</h2>${intro(ctx, 'introReports')}${cards(items, ctx)}`;
   return layout(ctx, { title: 'Reports', url: '/reports/', body });
 }
 
@@ -254,8 +276,11 @@ export function reportItem(ctx, item, size) {
   <h1>${esc(item.title)}</h1>
   <div class="meta">${item.data.publisher ? `${esc(item.data.publisher)} <span class="sep">⬩</span> ` : ''}${time(item.data.date, ctx.today)}</div>
   ${item.data.image ? `<img src="${attr(imageUrl(item))}" alt="${attr(item.data.imageAlt)}" width="560" height="350" class="illustration">` : ''}
-  <p class="lede">${esc(item.data.description)}</p>
-  ${pdf ? `<p class="download"><a href="${attr(pdf)}" class="button" download>Download the PDF${size ? ` <span class="size">(${size})</span>` : ''}</a></p>` : ''}
+  <p class="lede">${inline(item.data.description)}</p>
+  <p class="download">
+    ${item.data.link ? `<a href="${attr(item.data.link)}" class="button">Read the report</a>` : ''}
+    ${pdf ? `<a href="${attr(pdf)}" class="button${item.data.link ? ' secondary' : ''}" download>Download the PDF${size ? ` <span class="size">(${size})</span>` : ''}</a>` : ''}
+  </p>
   ${render(item.body)}
   ${peopleLine(item, ctx, 'Authors')}
 </section>`;
@@ -266,12 +291,14 @@ export function reportItem(ctx, item, size) {
 }
 
 export function peopleIndex(ctx, items) {
-  const body = `<h2>People</h2>
-<ul class="people-grid">
+  const body = `<h2>People</h2>${intro(ctx, 'introPeople')}
+<ul class="people-list">
 ${items.map((p) => `<li>
-  <a href="${p.url}">${p.data.photo ? `<img src="${attr(imageUrl(p, 'photo'))}" alt="${attr(p.data.name)}" width="400" height="400" loading="lazy">` : ''}</a>
-  <h3><a href="${p.url}">${esc(p.data.name)}</a></h3>
-  ${p.data.role ? `<p>${esc(p.data.role)}</p>` : ''}
+  <a href="${p.url}" class="portrait">${p.data.photo ? `<img src="${attr(imageUrl(p, 'photo'))}" alt="${attr(p.data.name)}" width="800" height="800" loading="lazy">` : ''}</a>
+  <div class="about">
+    <h3><a href="${p.url}">${esc(p.data.name)}</a>${p.data.role ? ` <span class="role">${esc(p.data.role)}</span>` : ''}</h3>
+    ${render(p.body)}
+  </div>
 </li>`).join('\n')}
 </ul>`;
   return layout(ctx, { title: 'People', url: '/people/', body });
@@ -290,7 +317,7 @@ export function personItem(ctx, p) {
   const body = `<section class="page person">
   <h1>${esc(p.data.name)}</h1>
   ${p.data.role ? `<div class="meta">${esc(p.data.role)}</div>` : ''}
-  ${p.data.photo ? `<img src="${attr(imageUrl(p, 'photo'))}" alt="${attr(p.data.name)}" width="400" height="400" class="illustration portrait">` : ''}
+  ${p.data.photo ? `<img src="${attr(imageUrl(p, 'photo'))}" alt="${attr(p.data.name)}" width="800" height="800" class="illustration portrait">` : ''}
   ${render(p.body)}
   ${links.length ? `<p class="links">${links.join(' <span class="sep">⬩</span> ')}</p>` : ''}
 </section>
@@ -344,7 +371,7 @@ ${items.map((i) => `  <entry>
     <link href="${attr(abs(i.url))}"/>
     <updated>${isoDateTime(i.data.date)}</updated>
     <id>${attr(abs(i.url))}</id>
-    <summary>${esc(i.data.description)}</summary>
+    <summary>${esc(plain(i.data.description))}</summary>
     <content type="html">${esc(render(i.body))}</content>
   </entry>`).join('\n')}
 </feed>

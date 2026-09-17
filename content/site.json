@@ -1,12 +1,16 @@
 {
   "title": "Supramundane Agency",
-  "description": "governance & technology",
+  "description": "bringing democracy to the internet",
   "url": "https://supramundane.agency/",
   "language": "en",
   "authorName": "Robin Berjon",
   "authorEmail": "robin@berjon.com",
   "authorUrl": "https://berjon.com/about/",
   "footer": "Made in 🇪🇺. Supramundane Agency is an operation of SRL Robin Berjon (BE1015.921.679).",
-  "atprotoDid": "",
-  "publicationUri": ""
+  "atprotoDid": "did:plc:piwl4w3haqco46y37flufjcv",
+  "publicationUri": "at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.publication/3mvnqo5cbm22w",
+  "introNews": "What's happening in all things Supramundane.",
+  "introVideos": "Talks, panels, and interviews.",
+  "introReports": "White papers, studies, and position papers.",
+  "introPeople": ""
 }

@@ -13,6 +13,7 @@ tags:
   - infrastructure
 people:
   - robin
+video: next-social-wave
 ---
 
 For years, social media has been dominated by a handful of companies, shaping how information flows,
@@ -27,17 +28,6 @@ us together with [Marietje Schaake](https://en.wikipedia.org/wiki/Marietje_Schaa
 Stanford University fellow, and [Emily Liu](https://bsky.app/profile/emilyliu.me), Head of Special
 Projects at Bluesky.
 
-You can [watch the entire panel at Streamyard](https://streamyard.com/watch/uhdM7fys7puE). I'm also
-including two of my interventions below.
-
-First, on the effect that authoritarian technical infrastructures have over society:
-
-<video controls>
-  <source src="/videos/rb-authoritarianism-in-social-media.mp4" type="video/mp4">
-</video>
-
-And second, on the power that the operators of digital infrastructure have:
-
-<video controls>
-  <source src="/videos/rb-power-of-digital-infrastructure.mp4" type="video/mp4">
-</video>
+You can [watch the entire panel at Streamyard](https://streamyard.com/watch/uhdM7fys7puE); two of my
+interventions — on the effect that authoritarian technical infrastructures have over society, and on the
+power that the operators of digital infrastructure have — are in the recording below.

@@ -1,9 +1,11 @@
 ---
 title: Home
+description: >-
+  Supramundane Agency is a consultancy specialised in bringing democracy to the
+  internet.
 ---
 
-**Supramundane Agency** is a consultancy specialised in the governance of
-technology, operated principally by [Robin Berjon](https://berjon.com/).
+**Supramundane Agency** is a consultancy specialised in bringing democracy to the internet., operated principally by [Robin Berjon](https://berjon.com/).
 
 Our methods include specifying protocols, developing libraries, prototypes, and products,
 creating strategies to ensure that a specific technology has governance affordances,
