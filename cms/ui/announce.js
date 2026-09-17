@@ -46,7 +46,9 @@ export class Announce extends SignalWatcher(LitElement) {
                 </label>
                 <div class="count ${len > 300 ? 'over' : ''}">${len} / 300</div>
                 <p class="muted" style="font-size:0.85rem">The link card uses the item's title, description, and image.</p>` : ''}`
-              : html`<p class="muted">Already posted to Bluesky; only the standard.site record will be refreshed.</p>`}
+              : html`<p class="muted">Already posted to Bluesky; the standard.site record will be refreshed.</p>
+                <label class="field"><span class="row"><input type="checkbox" .checked=${an.repost} @change=${(e) => send({ type: 'announce/set', patch: { repost: e.target.checked } })}> <span class="name" style="margin:0">Delete the post and post it again</span></span>
+                  <div class="help">Needed for posts made before the standard.site card was wired in: Bluesky never re-indexes an edited post. Likes and replies on the old post are lost; the text is reused.</div></label>`}
           `}
           ${an.error ? html`<div class="problems">${an.error}</div>` : ''}
           <div class="actions">

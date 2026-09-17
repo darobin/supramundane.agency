@@ -295,7 +295,7 @@ export function update(state, action) {
     // ── Announce (standard.site + Bluesky) ──────────────────────────────────
     case 'announce/open': {
       const ed = state.editor;
-      return tx({ ...state, announce: { open: true, loading: true, text: '', post: true, busy: false, result: null, error: null } }, async function* () {
+      return tx({ ...state, announce: { open: true, loading: true, text: '', post: true, repost: false, busy: false, result: null, error: null } }, async function* () {
         try { const p = await api.atproto.preview(ed.type, ed.id); yield { type: 'announce/preview', ...p }; }
         catch (err) { yield { type: 'announce/set', patch: { loading: false, error: err.message } }; }
       });
@@ -311,7 +311,7 @@ export function update(state, action) {
       const an = state.announce;
       return tx({ ...state, announce: { ...an, busy: true, error: null }, log: [] }, async function* () {
         try {
-          const r = await api.atproto.publish(ed.type, ed.id, { post: an.post, text: an.text });
+          const r = await api.atproto.publish(ed.type, ed.id, { post: an.post, text: an.text, repost: an.repost });
           yield { type: 'announce/set', patch: { busy: false, result: r } };
           yield { type: 'edit/open', collection: ed.type, id: ed.id };
           yield { type: 'toast', message: 'Published to ATProto', kind: 'success' };

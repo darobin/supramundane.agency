@@ -97,10 +97,16 @@ Then, on any saved news item or report, **Publish to standard.site & Bluesky…*
 1. pushes the site live (the post links to the page);
 2. creates a `site.standard.document` record (title, description, path, tags,
    cover image, plain-text content, `publishedAt`);
-3. posts to Bluesky with an editable text and a link card, and cross-links the
-   post from the document (`bskyPostRef`);
+3. posts to Bluesky with an editable text and a link card whose
+   `associatedRefs` pin the document and publication records — that is what
+   makes Bluesky clients render the standard.site card (source, reading time)
+   — and cross-links the post from the document (`bskyPostRef`);
 4. writes the two URIs into the item's front matter and pushes again, so the
    page carries `<link rel="site.standard.document" href="at://…">`.
+
+Bluesky's appview never re-indexes an edited post, so a post made without
+`associatedRefs` cannot be repaired in place; **Update record / post…** offers
+to delete it and post again instead.
 
 Tick **auto-announce new news** in the sidebar and every newly created news
 item goes through those steps on its own (with the default post text). To

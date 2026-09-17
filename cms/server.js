@@ -269,8 +269,8 @@ async function announceItem(t, id, opts) {
 }
 
 app.post('/api/atproto/publish/:type/:id', wrap(async (req, res) => {
-  const { post = true, text } = req.body || {};
-  res.json(await announceItem(type(req), req.params.id, { post, text }));
+  const { post = true, text, repost = false } = req.body || {};
+  res.json(await announceItem(type(req), req.params.id, { post, text, repost }));
 }));
 
 // Backfill: create standard.site records for every item that has none.

@@ -134,7 +134,7 @@ export async function ensurePublication({ iconFile } = {}) {
 // against the link (publication.url + document.path). Order matters and is
 // the same as Leaflet's: write the document, pin its cid in the post, then
 // point the document back at the post.
-export async function publishDocument(item, { post = true, text, siteConfig } = {}) {
+export async function publishDocument(item, { post = true, text, repost = false, siteConfig } = {}) {
   const a = need();
   const site = siteConfig || (await loadSite());
   if (!site.publicationUri) throw new Error('Create the standard.site publication first (ATProto panel).');
@@ -164,6 +164,17 @@ export async function publishDocument(item, { post = true, text, siteConfig } = 
 
   let bskyUri = item.data.bskyUri;
   let bskyCid = item.data.bskyCid;
+  if (bskyUri && repost) {
+    // The Bluesky appview never re-indexes an edited post, so a post made
+    // without associatedRefs can only gain the standard.site card by being
+    // made again. Reuse its text unless new text was given.
+    const { rkey } = parseAtUri(bskyUri);
+    const old = await a.com.atproto.repo.getRecord({ repo: a.session.did, collection: 'app.bsky.feed.post', rkey }).catch(() => null);
+    if (!text && old?.data?.value?.text) text = old.data.value.text;
+    await a.deletePost(bskyUri);
+    bskyUri = undefined;
+    bskyCid = undefined;
+  }
   if (post && !bskyUri) {
     const rt = new RichText({ text: text || defaultPostText(item, pageUrl) });
     await rt.detectFacets(a);
@@ -184,6 +195,7 @@ export async function publishDocument(item, { post = true, text, siteConfig } = 
     bskyCid = res.cid;
   } else if (bskyUri) {
     // An existing post: make sure it pins the current document/publication.
+    // (Other appviews may honour the edit; Bluesky's does not — see `repost`.)
     const repaired = await repairPost(a, bskyUri, docRef, pubRef);
     if (repaired) bskyCid = repaired.cid;
   }

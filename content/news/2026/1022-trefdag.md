@@ -11,8 +11,8 @@ tags:
 people:
   - robin
 atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mvp54uvebk25'
-bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mvp54uzeb62t'
-bskyCid: bafyreie7wsegvruxtty7ihpghmsbky6euf6wzan65otss6xchmh5xhaboy
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mvp5sijwjv2a'
+bskyCid: bafyreidufdsk7umgwuzlbj3hqcdrkp76ytg5hoxzuqkaxsjmzxyymlv7ku
 ---
 
 **Resilient through interoperability: how Europe can build its digital infrastructure differently**, with David Van den Brande - Athumi
