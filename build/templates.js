@@ -25,12 +25,21 @@ const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width=
   <use href="#supramundane-shape" x="0" y="0" fill="#fff" stroke="var(--highlight)" stroke-linejoin="bevel"></use>
 </svg>`;
 
-function nav(ctx) {
+// The nav collapses behind a burger on small screens (nav.js). Without
+// JavaScript the list is always shown.
+function nav(ctx, { burger = true } = {}) {
   const items = [
     ['/', 'home'], ['/news/', 'news'], ['/videos/', 'videos'], ['/reports/', 'reports'], ['/people/', 'people'],
     ...ctx.pages.filter((p) => p.data.nav).map((p) => [p.url, p.data.title.toLowerCase()]),
   ];
-  return `<nav><ul>${items.map(([href, label]) => `<li><a href="${attr(href)}">${esc(label)}</a></li>`).join('')}</ul></nav>`;
+  const list = `<ul${burger ? ' id="site-menu"' : ''}>${items.map(([href, label]) => `<li><a href="${attr(href)}">${esc(label)}</a></li>`).join('')}</ul>`;
+  if (!burger) return `<nav>${list}</nav>`;
+  return `<nav class="site-nav">
+  <button class="burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Menu" hidden>
+    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+  </button>
+  ${list}
+</nav>`;
 }
 
 // page: { title, description, url, image, imageAlt, atUri, type ('article'|'website'), body, scripts }
@@ -63,7 +72,7 @@ ${page.atUri ? `<link rel="site.standard.document" href="${attr(page.atUri)}">` 
 </head>
 <body>
 <a class="skip-to-content-link" href="#main">Skip to content</a>
-${nav(ctx)}
+${nav(ctx, { burger: true })}
 <header>
   <a href="/" class="home-link">supramundane <span class="agency">agency</span>.</a>
   ${LOGO}
@@ -71,11 +80,11 @@ ${nav(ctx)}
 <main id="main">
 ${page.body}
 </main>
-${nav(ctx)}
 <footer>
   <p>${inline(site.footer || '')}</p>
   <p class="contact">${site.authorEmail ? `<a href="mailto:${attr(site.authorEmail)}">${esc(site.authorEmail)}</a>` : ''}${site.authorUrl ? ` <span class="sep">⬩</span> <a href="${attr(site.authorUrl)}">${esc(site.authorName || site.authorUrl)}</a>` : ''} <span class="sep">⬩</span> <a href="/feed.atom">feed</a></p>
 </footer>
+<script src="/js/nav.js"></script>
 ${(page.scripts || []).map((s) => `<script src="${attr(s)}"></script>`).join('\n')}
 </body>
 </html>
