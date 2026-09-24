@@ -1,6 +1,6 @@
 ---
 title: De l’usage démocratique des protocoles
-date: '2026-09-23'
+date: '2026-01-20'
 description: >-
   Soirée destinée aux décideurs, journalistes, mécènes, scientifiques,
   libristes, citoyennes et citoyens qui souhaitent s’informer, réfléchir et agir

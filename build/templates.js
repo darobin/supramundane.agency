@@ -76,7 +76,6 @@ ${nav(ctx)}
   <p>${inline(site.footer || '')}</p>
   <p class="contact">${site.authorEmail ? `<a href="mailto:${attr(site.authorEmail)}">${esc(site.authorEmail)}</a>` : ''}${site.authorUrl ? ` <span class="sep">⬩</span> <a href="${attr(site.authorUrl)}">${esc(site.authorName || site.authorUrl)}</a>` : ''} <span class="sep">⬩</span> <a href="/feed.atom">feed</a></p>
 </footer>
-<script src="/js/colours.js"></script>
 ${(page.scripts || []).map((s) => `<script src="${attr(s)}"></script>`).join('\n')}
 </body>
 </html>
@@ -145,15 +144,30 @@ export function embedFor(url) {
   try { u = new URL(url); } catch { return null; }
   const host = u.hostname.replace(/^www\./, '');
   let m;
-  if (host === 'youtu.be') return { kind: 'iframe', src: `https://www.youtube-nocookie.com/embed/${u.pathname.slice(1)}` };
+  // YouTube, keeping a start time (?t=1h2m3s, ?t=123, ?start=123) if the link has one.
+  const ytStart = () => {
+    const t = u.searchParams.get('t') || u.searchParams.get('start');
+    if (!t) return '';
+    const m = t.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/);
+    const secs = m ? (Number(m[1] || 0) * 3600 + Number(m[2] || 0) * 60 + Number(m[3] || 0)) : 0;
+    return secs ? `?start=${secs}` : '';
+  };
+  if (host === 'youtu.be') return { kind: 'iframe', src: `https://www.youtube-nocookie.com/embed/${u.pathname.slice(1)}${ytStart()}` };
   if (/(^|\.)youtube(-nocookie)?\.com$/.test(host)) {
     const id = u.searchParams.get('v') || (u.pathname.match(/^\/(?:embed|live|shorts|v)\/([^/?]+)/) || [])[1];
-    if (id) return { kind: 'iframe', src: `https://www.youtube-nocookie.com/embed/${id}` };
+    if (id) return { kind: 'iframe', src: `https://www.youtube-nocookie.com/embed/${id}${ytStart()}` };
   }
   if (host === 'vimeo.com' && (m = u.pathname.match(/^\/(\d+)/))) return { kind: 'iframe', src: `https://player.vimeo.com/video/${m[1]}?dnt=1` };
   if (host === 'player.vimeo.com' && (m = u.pathname.match(/^\/video\/(\d+)/))) return { kind: 'iframe', src: `https://player.vimeo.com/video/${m[1]}?dnt=1` };
   // PeerTube: https://instance/w/ID or /videos/watch/ID → /videos/embed/ID
   if ((m = u.pathname.match(/^\/(?:w|videos\/(?:watch|embed))\/([^/?]+)/))) return { kind: 'iframe', src: `${u.origin}/videos/embed/${m[1]}` };
+  // RTÉ: a clip page /radio/<station>/clips/<id>/ or the embed itself → their embeddable player.
+  if (host === 'rte.ie' && (m = u.pathname.match(/^\/radio\/[^/]+\/clips\/(\d+)/) || (u.pathname.startsWith('/media-embed/') && (m = [null, u.searchParams.get('id')])))) {
+    if (m[1]) return { kind: 'iframe', src: `https://www.rte.ie/media-embed/dustin/?id=${m[1]}&radioUI=true`, audio: true };
+  }
+  // A media file hosted elsewhere (e.g. a parliament's VOD, a radio podcast): play it directly.
+  if (/\.(mp4|webm|m4v|mov)$/i.test(u.pathname)) return { kind: 'media', src: url };
+  if (/\.(mp3|m4a|aac|ogg|oga|wav)$/i.test(u.pathname)) return { kind: 'audio', src: url };
   return { kind: 'link', href: url };
 }
 
@@ -166,8 +180,17 @@ export function clipPlayer(item, clip, i = 0) {
   if (clip.file) {
     return `<video controls preload="metadata" ${poster ? `poster="${attr(poster)}"` : ''} src="${attr(item.urlDir + clip.file)}" class="player"></video>`;
   }
+  if (embed?.kind === 'media') {
+    // Remote files can be huge (a full parliamentary session): don't preload.
+    return `<video controls preload="none" ${poster ? `poster="${attr(poster)}"` : ''} src="${attr(embed.src)}" class="player"></video>`;
+  }
+  if (embed?.kind === 'audio') {
+    // Radio and podcasts: the poster stands in for the picture.
+    return `<div class="audio">${poster ? `<img src="${attr(poster)}" alt="${attr(item.data.imageAlt || '')}" width="560" height="350">` : ''}<audio controls preload="none" src="${attr(embed.src)}"></audio></div>`;
+  }
   if (embed?.kind === 'iframe') {
-    return `<div class="embed"><iframe src="${attr(embed.src)}" title="${attr(title)}" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;
+    // Audio players (radio) are short; video ones keep the 16:9 box.
+    return `<div class="embed${embed.audio ? ' embed-audio' : ''}"><iframe src="${attr(embed.src)}" title="${attr(title)}" loading="lazy" allow="fullscreen; picture-in-picture; autoplay" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;
   }
   if (embed?.kind === 'link') return `<p><a href="${attr(embed.href)}">Watch the video</a></p>`;
   return '';

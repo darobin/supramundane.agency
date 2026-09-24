@@ -31,12 +31,11 @@
   --grey-teal: #729397;
   --yelly: #f4b32c;
   --too-red: #dc1b27;
-  /* new colour set, not yet implemented */
-  /*--too-red: #dc1b27;*/
-  /*--yelly: #f4b32c;*/
   --tealpot: #1dddaf;
   --azure-about-it: #1cceff;
   --purple-hazing: #653ced;
+  /* One highlight colour everywhere (it used to be picked at random per page load). */
+  --highlight: var(--purple-hazing);
 }
 
 * {
@@ -293,6 +292,11 @@ ol.postlist .kind {
   margin: 1rem 0;
   background: #000;
 }
+.embed.embed-audio {
+  aspect-ratio: auto;
+  height: 200px;
+  background: none;
+}
 .embed iframe {
   position: absolute;
   inset: 0;
@@ -304,6 +308,18 @@ video.player {
   width: 100%;
   margin: 1rem 0;
   background: #000;
+}
+.audio {
+  margin: 1rem 0;
+}
+.audio img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.audio audio {
+  display: block;
+  width: 100%;
 }
 .related-video {
   clear: both;
