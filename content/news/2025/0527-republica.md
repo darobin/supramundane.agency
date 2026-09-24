@@ -13,6 +13,9 @@ tags:
   - conference
 people:
   - robin
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mw6vqxdmql2a'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mw6vqxm6cj2g'
+bskyCid: bafyreichwzndcerreayvmlovd5mejz2gz4p5pvikqzb5xx4q3hynextcqi
 ---
 
 I'm delighted to be speaking at [Re:publica](https://re-publica.com/),

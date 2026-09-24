@@ -14,6 +14,9 @@ tags:
 people:
   - robin
 video: next-social-wave
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mw6vqvfdpz2c'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mw6vqvoco32a'
+bskyCid: bafyreihfuezzbqirc4r7lbvjgxoculeoui7tzkxaydrvvzlwojhjmhsxfm
 ---
 
 For years, social media has been dominated by a handful of companies, shaping how information flows,

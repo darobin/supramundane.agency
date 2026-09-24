@@ -66,7 +66,7 @@ export class App extends SignalWatcher(LitElement) {
             <a class=${active('list', type)} href=${hashFor({ view: 'list', type })}>${col.label} <span class="n">${(s.items[type] || []).length}</span></a>`)}
           <hr>
           <a class=${active('site')} href="#/site">Site settings</a>
-          <a class=${active('atproto')} href="#/atproto">ATProto ${s.atproto.loggedIn ? html`<span class="n">@${s.atproto.handle}</span>` : html`<span class="n">not logged in</span>`}</a>
+          <a class=${active('atproto')} href="#/atproto" title=${s.atproto.reason || ''}>ATProto ${s.atproto.loggedIn ? html`<span class="n">@${s.atproto.handle}</span>` : html`<span class="n" style="color:var(--danger)">logged out</span>`}</a>
           <hr>
           <a href=${s.previewUrl} target="_blank">Preview site ↗</a>
         </nav>

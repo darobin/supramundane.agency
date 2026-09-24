@@ -14,6 +14,9 @@ tags:
   - sovereignty
 people:
   - robin
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mw6vqvuvul22'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mw6vqw3y632a'
+bskyCid: bafyreier67eyl3vshni6y4f5jxdw5wrajgvvkvmi26uqvd5pwtooifhdou
 ---
 
 The [Graduate Institute](https://www.graduateinstitute.ch) hosted

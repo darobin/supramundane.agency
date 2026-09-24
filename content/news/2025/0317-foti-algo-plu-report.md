@@ -15,6 +15,9 @@ tags:
 people:
   - robin
 report: algorithmic-pluralism
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mw6vquznpb2c'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mw6vqv4sp42t'
+bskyCid: bafyreia55tbz5hlqz4q2hyuyq23epqq72rb2satt5khigjhvnuljla6jsm
 ---
 
 This whitepaper is part of the first in a series on the Open Network Economy (ON Economy),

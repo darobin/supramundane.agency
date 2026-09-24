@@ -121,6 +121,11 @@ function intro(ctx, key) {
   return ctx.site[key] ? `<div class="intro">${render(ctx.site[key])}</div>` : '';
 }
 
+// "https://www.example.org/path/" → "example.org/path"
+function prettyUrl(url) {
+  return url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+}
+
 function tagList(tags = []) {
   if (!tags.length) return '';
   return `<ul class="tags">${tags.map((t, i) => `<li><a href="/tags/${slugify(t)}/" class="post-tag">${esc(t)}</a>${i < tags.length - 1 ? ', ' : ''}</li>`).join('')}</ul>`;
@@ -220,6 +225,7 @@ export function newsItem(ctx, item, { prev, next }) {
   <div class="meta">${location(item.data.location)}${time(item.data.date, ctx.today)}</div>
   ${item.data.image ? `<img src="${attr(imageUrl(item))}" alt="${attr(item.data.imageAlt)}" width="560" height="350" class="illustration">` : ''}
   ${render(item.body)}
+  ${item.data.url ? `<p class="external-link"><a href="${attr(item.data.url)}" rel="noopener">${esc(prettyUrl(item.data.url))}</a> ↗</p>` : ''}
   ${peopleLine(item, ctx)}
   ${report ? `<p class="download"><a href="${report.url}" class="button">Read the report</a></p>` : ''}
   ${video ? `<section class="related-video"><h2>Recording</h2>${videoPlayer(video)}<p><a href="${video.url}">${esc(video.title)}</a></p></section>` : ''}

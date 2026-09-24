@@ -3,6 +3,7 @@ title: Trefdag Vlaanderen Digitaal 2026
 date: '2026-10-22'
 description: 'Talking about sovereignty, social media, and identity.'
 location: 'Gent, BE'
+url: 'https://www.vlaanderen.be/trefdag-vlaanderen-digitaal'
 image: 1022-trefdag.png
 imageAlt: Abstract design with the text Trefdag Vlaanderen Digitaal 2026
 tags:

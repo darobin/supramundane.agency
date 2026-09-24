@@ -64,7 +64,8 @@ export class Atproto extends SignalWatcher(LitElement) {
             <button @click=${() => send({ type: 'atproto/logout' })}>Log out</button>
           </div>`
         : html`
-          <p class="muted">Log in with the agency account and an <a href="https://bsky.app/settings/app-passwords" target="_blank">app password</a>. The session is kept in <code>.cms/</code> (git-ignored) so you only do this once.</p>
+          ${a.reason ? html`<div class="problems">${a.reason}</div>` : ''}
+          <p class="muted">Log in with the agency account and an <a href="https://bsky.app/settings/app-passwords" target="_blank">app password</a>. The session is kept in <code>.cms/</code> (git-ignored) so you only do this once — and only this server should use it: another process resuming the same session invalidates it here.</p>
           <form @submit=${(e) => { e.preventDefault(); send({ type: 'atproto/login', creds: { identifier: this._handle, password: this._password } }); this._password = ''; }}>
             <label class="field"><span class="name">Handle or DID</span><input type="text" .value=${this._handle} @input=${(e) => { this._handle = e.target.value; }} autocomplete="username"></label>
             <label class="field"><span class="name">App password</span><input type="password" .value=${this._password} @input=${(e) => { this._password = e.target.value; }} autocomplete="current-password"></label>

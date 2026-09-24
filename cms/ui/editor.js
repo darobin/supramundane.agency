@@ -77,7 +77,7 @@ export class Editor extends SignalWatcher(LitElement) {
           ${announceable && !ed.isNew ? html`<div class="panel">
             <h3>Announce</h3>
             ${ro.map((f) => html`<div class="readonly"><span class="name">${f.label || f.name}</span>${this._roValue(f, ed)}</div>`)}
-            ${!s.atproto.loggedIn ? html`<p class="muted">Log in on the <a href="#/atproto">ATProto page</a> to publish this to standard.site and Bluesky.</p>`
+            ${!s.atproto.loggedIn ? html`<p class="muted">${s.atproto.reason ? html`<strong>${s.atproto.reason}</strong> ` : ''}Log in on the <a href="#/atproto">ATProto page</a> to publish this to standard.site and Bluesky.</p>`
               : !s.site.publicationUri ? html`<p class="muted">Create the publication record on the <a href="#/atproto">ATProto page</a> first.</p>`
               : ed.data.atUri ? html`<p class="muted">Published to ATProto${ed.data.bskyUri ? ' and posted to Bluesky' : ''}.</p>
                   <button @click=${() => send({ type: 'announce/open' })} ?disabled=${ed.dirty}>Update record${ed.data.bskyUri ? '' : ' / post…'}</button>`
@@ -181,6 +181,6 @@ export class Editor extends SignalWatcher(LitElement) {
 }
 
 // Fields that go in the right-hand column.
-const SIDE = new Set(['tags', 'people', 'video', 'report', 'location', 'event', 'publisher', 'order', 'website', 'bluesky', 'email', 'nav', 'link']);
+const SIDE = new Set(['tags', 'people', 'video', 'report', 'location', 'url', 'event', 'publisher', 'order', 'website', 'bluesky', 'email', 'nav', 'link']);
 
 customElements.define('sm-editor', Editor);

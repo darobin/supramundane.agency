@@ -15,6 +15,9 @@ people:
 tags:
   - democracy
   - infrastructure
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mw6vqtdahr2g'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mw6vqufmwl2a'
+bskyCid: bafyreiaco3fgxlndwq7rd4fpsvds433pgzx6me555sni2tdgmx57priheu
 ---
 
 This whitepaper is part of the first in a series on the Open Network Economy (ON Economy),

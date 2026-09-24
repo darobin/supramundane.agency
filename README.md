@@ -83,7 +83,11 @@ Videos, Reports, and People pages is edited in **Site settings**.
 ## ATProto: standard.site and Bluesky
 
 On the **ATProto** page, log in with the agency account and an app password
-(once; the session is kept in `.cms/`). Logging in records the account's DID in
+(once; the session is kept in `.cms/session.json`). Refresh tokens are
+single-use, so only the running CMS should use that session: a script that
+resumes it rotates the token and logs the server out (the server now tries to
+pick up a rotated token from the file before giving up, and says why it is
+logged out when it can't). Logging in records the account's DID in
 `site.json`, and the build then serves it at `/.well-known/atproto-did` so
 `supramundane.agency` can be set as the account's handle (Bluesky settings →
 Change handle → I have my own domain → No DNS panel).

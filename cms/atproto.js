@@ -13,11 +13,43 @@ const DEFAULT_SERVICE = 'https://bsky.social';
 
 let agent = null;
 let profile = null;
+let current = null;   // the session we last saw from the SDK (to detect rotation by another process)
+let reason = null;    // why we are logged out, when we know
 
+// Called by the SDK whenever the session changes. Refresh tokens are
+// single-use, so if some other process resumed the same saved session it
+// rotated the token under us; on 'expired' we check the file before giving
+// up, and only delete it when it holds the very token that just failed.
 async function persist(evt, session) {
   await mkdir(STATE_DIR, { recursive: true });
-  if (session) await writeFile(SESSION_FILE, JSON.stringify({ service: agent.serviceUrl.href, session }, null, 2));
-  else await rm(SESSION_FILE, { force: true });
+  if (session) {
+    current = session;
+    reason = null;
+    await writeFile(SESSION_FILE, JSON.stringify({ service: agent.serviceUrl.href, session }, null, 2));
+    return;
+  }
+  if (evt === 'expired') {
+    const saved = await readSaved();
+    if (saved?.session?.refreshJwt && saved.session.refreshJwt !== current?.refreshJwt) {
+      console.warn('ATProto session was rotated by another process; resuming from the saved file');
+      try {
+        await agent.resumeSession(saved.session);
+        return;
+      } catch (err) {
+        console.warn('could not resume rotated session:', err.message);
+      }
+    }
+    reason = `Session expired on ${new Date().toISOString().slice(0, 16).replace('T', ' ')} — log in again.`;
+  } else if (evt === 'create-failed') {
+    reason = 'Login failed.';
+  }
+  current = null;
+  await rm(SESSION_FILE, { force: true });
+}
+
+async function readSaved() {
+  if (!(await exists(SESSION_FILE))) return null;
+  try { return JSON.parse(await readFile(SESSION_FILE, 'utf8')); } catch { return null; }
 }
 
 async function refreshProfile() {
@@ -32,15 +64,21 @@ async function refreshProfile() {
 
 // Resume a saved session on startup. Returns the status object.
 export async function resume() {
-  if (!(await exists(SESSION_FILE))) return status();
+  const saved = await readSaved();
+  if (!saved) {
+    if (!reason) reason = 'No saved session — log in on the ATProto page.';
+    return status();
+  }
   try {
-    const { service, session } = JSON.parse(await readFile(SESSION_FILE, 'utf8'));
-    agent = new AtpAgent({ service: service || DEFAULT_SERVICE, persistSession: persist });
-    await agent.resumeSession(session);
+    current = saved.session;
+    agent = new AtpAgent({ service: saved.service || DEFAULT_SERVICE, persistSession: persist });
+    await agent.resumeSession(saved.session);
     await refreshProfile();
   } catch (err) {
     console.warn('could not resume ATProto session:', err.message);
-    agent = null;
+    // A transient failure keeps the session (the SDK left it in place);
+    // only a rejected token has cleared it.
+    if (!agent?.session) { agent = null; if (!reason) reason = `Could not resume session: ${err.message}`; }
   }
   return status();
 }
@@ -64,16 +102,18 @@ export async function login({ identifier, password, service = DEFAULT_SERVICE })
 export async function logout() {
   agent = null;
   profile = null;
+  current = null;
+  reason = 'Logged out.';
   await rm(SESSION_FILE, { force: true });
   return status();
 }
 
 export function status() {
-  return agent?.session ? { loggedIn: true, ...profile, service: agent.serviceUrl.href } : { loggedIn: false };
+  return agent?.session ? { loggedIn: true, ...profile, service: agent.serviceUrl.href } : { loggedIn: false, reason };
 }
 
 function need() {
-  if (!agent?.session) throw new Error('Not logged in to ATProto.');
+  if (!agent?.session) throw new Error(`Not logged in to ATProto. ${reason || ''}`.trim());
   return agent;
 }
 

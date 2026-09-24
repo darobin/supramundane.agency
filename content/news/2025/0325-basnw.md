@@ -12,6 +12,9 @@ tags:
   - writing
 people:
   - robin
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mw6vqwc7xm2t'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mw6vqwmrgz2c'
+bskyCid: bafyreif6h2u6kp5hcqeeo46qowyxyvdiopm7qhfy4cw5ziq75ml4adxdpi
 ---
 
 This came as a huge and delightful surprise: _[We Need To Rewild The Internet](https://www.noemamag.com/we-need-to-rewild-the-internet/)_,

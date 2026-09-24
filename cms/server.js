@@ -169,12 +169,14 @@ app.put('/api/items/:type/:id', wrap(async (req, res) => {
   emit('items-changed', { type: t, id });
   res.json({ ...summary(item), body: item.body });
   const isNew = !from;
-  if (isNew && settings.autoAnnounce && t === 'news' && announceable(t) && at.status().loggedIn) {
+  const wantsAnnounce = isNew && settings.autoAnnounce && t === 'news' && announceable(t);
+  if (wantsAnnounce && at.status().loggedIn) {
     // New news goes out on its own; the announce pipeline publishes the site itself.
     announceItem(t, id, { post: true })
       .then((r) => emit('announced', { type: t, id, ...r }))
       .catch((err) => emit('error', { where: 'announce', message: err.message }));
   } else {
+    if (wantsAnnounce) emit('error', { where: 'auto-announce', message: `skipped — not logged in to ATProto. ${at.status().reason || ''}` });
     afterChange(`save ${t}/${id}`).catch(() => {});
   }
 }));

@@ -12,6 +12,9 @@ tags:
   - privacy
 people:
   - robin
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mw6vqumgol2a'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mw6vqus7fj2g'
+bskyCid: bafyreibp7bkctn3qdczrobljascd7mtloxqttzfv5fber2qyst5wj7wbea
 ---
 
 [Schloss Dagstuhl](https://www.dagstuhl.de/) is a German public institution that hosts

@@ -388,9 +388,16 @@ p.download a.button.secondary {
   font-weight: normal;
   margin-left: 0.5rem;
 }
-.person .links, .people, .related, .source {
+.person .links, .people, .related, .source, .external-link {
   clear: both;
   font-size: 0.9rem;
+}
+.external-link {
+  clear: none;
+  font-weight: bold;
+}
+.external-link a {
+  text-decoration-color: var(--highlight);
 }
 ul.tag-index {
   list-style: none;
