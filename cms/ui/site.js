@@ -61,6 +61,7 @@ export class Atproto extends SignalWatcher(LitElement) {
             ${a.avatar ? html`<img src=${a.avatar} alt="">` : ''}
             <div><div class="handle">@${a.handle}</div><div class="mono muted">${a.did}</div></div>
             <span style="flex:1"></span>
+            <button ?disabled=${s.busy.atproto} @click=${() => send({ type: 'atproto/avatar' })} title="Uploads public/img/publication-icon.png as the account's avatar">Use publication icon as avatar</button>
             <button @click=${() => send({ type: 'atproto/logout' })}>Log out</button>
           </div>`
         : html`

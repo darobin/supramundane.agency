@@ -237,6 +237,11 @@ app.post('/api/atproto/publication', wrap(async (req, res) => {
   afterChange('publication record').catch(() => {});
 }));
 
+// Make the account's avatar the publication icon.
+app.post('/api/atproto/avatar', wrap(async (req, res) => {
+  res.json(await at.setAvatar(path.join(ROOT, 'public/img/publication-icon.png')));
+}));
+
 // What the Bluesky post would say.
 app.get('/api/atproto/preview/:type/:id', wrap(async (req, res) => {
   const item = await loadItem(type(req), req.params.id);

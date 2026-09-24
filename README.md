@@ -92,7 +92,8 @@ logged out when it can't). Logging in records the account's DID in
 `supramundane.agency` can be set as the account's handle (Bluesky settings →
 Change handle → I have my own domain → No DNS panel).
 
-**Create publication record** creates the `site.standard.publication` record
+**Use publication icon as avatar** sets the account's Bluesky avatar to
+`public/img/publication-icon.png`. **Create publication record** creates the `site.standard.publication` record
 (with `public/img/publication-icon.png` as icon) and stores its `at://` URI in
 `site.json`; the build serves it at `/.well-known/site.standard.publication`.
 

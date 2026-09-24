@@ -292,6 +292,13 @@ export function update(state, action) {
     case 'backfill/queued':
       return tx(action.queued ? { ...state, backfill: { ...state.backfill, total: action.queued } } : { ...state, backfill: null });
 
+    case 'atproto/avatar':
+      return tx({ ...state, busy: { ...state.busy, atproto: true } }, async function* () {
+        try { const st = await api.atproto.avatar(); yield { type: 'atproto/status', status: st }; yield { type: 'toast', message: 'Avatar updated', kind: 'success' }; }
+        catch (err) { yield { type: 'toast', message: err.message, kind: 'error' }; }
+        yield { type: 'busy', key: 'atproto', value: false };
+      });
+
     // ── Announce (standard.site + Bluesky) ──────────────────────────────────
     case 'announce/open': {
       const ed = state.editor;

@@ -165,6 +165,15 @@ export async function ensurePublication({ iconFile } = {}) {
   return { uri, record: { ...record, icon: record.icon ? '(blob)' : undefined } };
 }
 
+// Set the account's Bluesky avatar from an image file (the publication icon).
+export async function setAvatar(file) {
+  const a = need();
+  const blob = await uploadImage(file);
+  await a.upsertProfile((existing) => ({ ...(existing || {}), avatar: blob }));
+  await refreshProfile();
+  return status();
+}
+
 // Publish an item (news, report) as a site.standard.document; optionally
 // announce it on Bluesky and cross-link the two. Returns { atUri, bskyUri }.
 //

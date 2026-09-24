@@ -32,6 +32,7 @@ export const api = {
     login: (creds) => req('POST', '/api/atproto/login', creds),
     logout: () => req('POST', '/api/atproto/logout'),
     publication: () => req('POST', '/api/atproto/publication'),
+    avatar: () => req('POST', '/api/atproto/avatar'),
     preview: (type, id) => req('GET', `/api/atproto/preview/${type}/${enc(id)}`),
     publish: (type, id, opts) => req('POST', `/api/atproto/publish/${type}/${enc(id)}`, opts),
     backfill: (opts) => req('POST', '/api/atproto/backfill', opts),
