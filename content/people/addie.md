@@ -1,5 +1,6 @@
 ---
 name: Addie Wagenknecht
+role: Resident Intellectual
 photo: addie.png
 website: 'https://placesiveneverbeen.com/overview'
 email: wheresaddie@gmail.com
