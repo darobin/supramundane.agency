@@ -30,10 +30,16 @@ function emit(type, payload = {}) {
 
 // ── Build & publish pipeline ─────────────────────────────────────────────────
 let building = null;
+let rebuildAgain = null;
 let lastBuild = null;
 let lastPublish = null;
+// A change that lands mid-build may have been read too late, so it queues one
+// more build after the current one (further requests share that queued build).
 async function rebuild(reason = 'manual') {
-  if (building) return building;
+  if (building) {
+    rebuildAgain ??= building.catch(() => {}).then(() => { rebuildAgain = null; return rebuild(reason); });
+    return rebuildAgain;
+  }
   building = (async () => {
     try {
       const r = await build({ quiet: true });

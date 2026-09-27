@@ -132,6 +132,8 @@ scratch/
 
 # supramundane: build output, CMS state, bundled admin UI
 site/
+site.tmp-*/
+site.old-*/
 .cms/
 cms/ui/dist/
 .DS_Store
