@@ -82,7 +82,6 @@ ${page.body}
 </main>
 <footer>
   <p>${inline(site.footer || '')}</p>
-  <p class="contact">${site.authorEmail ? `<a href="mailto:${attr(site.authorEmail)}">${esc(site.authorEmail)}</a>` : ''}${site.authorUrl ? ` <span class="sep">⬩</span> <a href="${attr(site.authorUrl)}">${esc(site.authorName || site.authorUrl)}</a>` : ''} <span class="sep">⬩</span> <a href="/feed.atom">feed</a></p>
 </footer>
 <script src="/js/nav.js"></script>
 ${(page.scripts || []).map((s) => `<script src="${attr(s)}"></script>`).join('\n')}
