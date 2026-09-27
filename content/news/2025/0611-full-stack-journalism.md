@@ -17,6 +17,9 @@ tags:
 people:
   - robin
 video: full-stack-journalism-2025
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mwdspgbhnn2a'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mwdspgfw5s2s'
+bskyCid: bafyreiabouzlrqkcsrg45dlerjydhyoku3r47gzhs4z4mxich22nrcpknq
 ---
 
 [Full Stack Journalism](https://www.linkedin.com/company/full-stack-journalism/), a visual podcast from Are

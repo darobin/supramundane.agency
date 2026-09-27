@@ -19,6 +19,9 @@ tags:
   - infrastructure
 people:
   - robin
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mwdspgogov2a'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mwdspgu5262t'
+bskyCid: bafyreihqwabwxpkazpaxn2ul3blx37vpzg62glb2ii3h7podqxrpn375ga
 ---
 
 With a leaked memo from the US–EU trade talks suggesting Brussels might water down tech enforcement in

@@ -21,6 +21,9 @@ tags:
   - democracy
 people:
   - robin
+atUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/site.standard.document/3mwdsph4gt42a'
+bskyUri: 'at://did:plc:piwl4w3haqco46y37flufjcv/app.bsky.feed.post/3mwdsphcebu2r'
+bskyCid: bafyreiew3t2rnbk7chpfrdqcyexaztdmhylxtkt2bxrcxmzmpwdi7xrn5y
 ---
 
 French Response, the X account run by the Quai d’Orsay to answer disinformation with satire, has earned
