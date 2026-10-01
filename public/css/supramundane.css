@@ -57,6 +57,8 @@ body {
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
+  /* Long words and URLs wrap rather than widen the page on phones. */
+  overflow-wrap: break-word;
 }
 .skip-to-content-link {
   left: 50%;
@@ -210,6 +212,11 @@ h1 {
   margin: 0;
   line-height: 1.2;
 }
+@media only screen and (max-width:650px) {
+  h1 {
+    hyphens: auto; /* a long word in a big heading breaks with a hyphen, not mid-word */
+  }
+}
 h2 {
   font-size: inherit;
 }
@@ -260,6 +267,14 @@ img.illustration {
   width: 300px;
   height: auto;
 }
+@media only screen and (max-width:650px) {
+  /* No room for text beside it on a phone: it would wrap letter by letter. */
+  img.illustration {
+    float: none;
+    display: block;
+    margin: 0 0 1rem 0;
+  }
+}
 .tags li {
   display: inline;
 }
@@ -276,6 +291,10 @@ img, video {
   clear: both;
   display: flex;
   gap: 1rem;
+}
+.links-nextprev a {
+  min-width: 0; /* flex items otherwise refuse to shrink below their longest word */
+  overflow-wrap: anywhere;
 }
 blockquote {
   clear: both;
