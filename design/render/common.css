@@ -1,0 +1,8 @@
+@font-face { font-family: "Cormorant"; src: url("../../public/css/Cormorant-VariableFont_wght.ttf"); font-style: normal; }
+@font-face { font-family: "Cormorant"; src: url("../../public/css/Cormorant-Italic-VariableFont_wght.ttf"); font-style: italic; }
+@font-face { font-family: "Mulish"; src: url("../../public/css/Mulish-VariableFont_wght.ttf"); font-style: normal; }
+html, body { margin: 0; padding: 0; background: transparent; }
+body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+svg.bug { stroke: #653ced; fill: #fff; stroke-width: 0.1; stroke-linejoin: bevel; display: block; }
+.wordmark { font-family: Cormorant; font-weight: 100; line-height: 1; color: #000; white-space: nowrap; }
+.tagline { font-family: Mulish; font-weight: 200; text-transform: uppercase; color: #555; white-space: nowrap; }

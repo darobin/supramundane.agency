@@ -48,7 +48,7 @@ export function layout(ctx, page) {
   const title = page.title ? `${page.title} — ${site.title}` : site.title;
   const description = plain(page.description || site.description);
   const abs = (u) => (u ? new URL(u, site.url).href : '');
-  const image = abs(page.image || '/img/card.jpg');
+  const image = abs(page.image || '/img/card.png');
   return `<!doctype html>
 <html lang="${attr(site.language || 'en')}">
 <head>
